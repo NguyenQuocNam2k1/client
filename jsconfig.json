@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "src/*"
+      ],
+      "~a/*": [
+        "asset/*"
+      ],
+      "~h/*": [
+        "hooks/*"
+      ],
+      "~r/*": [
+        "redux/*"
+      ],
+      "-cc/*": [
+        "src/components/core/*"
+      ],
+      "-cl/*": [
+        "src/components/layout/*"
+      ],
+      "-cp/*": [
+        "src/components/pages/*"
+      ],
+      "-cr/*": [
+        "src/components/routes/*"
+      ]
+    }
+  }
+}

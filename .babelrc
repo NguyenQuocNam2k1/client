@@ -1,0 +1,21 @@
+{
+    "plugins": [
+        [
+            "module-resolver",
+            {
+                "alias": {
+                    "~": "./src",
+                    "~a": "./asset",
+                    "~h": "./hooks",
+                    "~r": "./redux",
+                    "-c": "./src/components",
+                    "-cc": "./src/components/core",
+                    "-cl": "./src/components/layout",
+                    "-cp": "./src/components/pages",
+                    "-cr": "./src/components/routes"
+                }
+            }
+        ]
+    ],
+    "presets": ["babel-preset-react-app"]
+}

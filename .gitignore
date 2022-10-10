@@ -1,0 +1,44 @@
+# dependencies
+front/build
+admin/build
+/.pnp
+.pnp.js
+**/omg-facebook-chat.min.js**
+**/omg-fbc-custom.js**
+**/facebook-chat.js.liquid**
+**/facebook-chat.liquid**
+**/omg-facebook-chat_style.css**
+**/.env**
+upload/
+
+# testing
+/coverage
+
+# # production
+# /front/build/*
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock*
+composer.lock*
+
+#config
+smtp_config.php
+conn-shopify.php
+config-db.php
+cache/*
+facebook-chat.js
+**/node_modules**
+**/node_modules**
+package-lock.json*
+.idea
+._**
+health-check.php

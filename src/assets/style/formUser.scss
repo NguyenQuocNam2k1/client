@@ -1,0 +1,33 @@
+.form-user{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &_content{
+        height: fit-content !important;
+        position: absolute;
+        width: 400px !important;
+        border-radius: 16px !important;
+    }
+    &_background{
+        background-image: url("../image/background-login.jpg");
+        width: 100vw;
+        height: 100vh;
+        background-position: center;
+        background-size: cover;
+        object-fit: cover;
+    }
+    &_input{
+        margin-bottom: 20px;
+    }
+    &_register{
+        margin-top:10px !important;
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    .MuiInput-formControl{
+        margin-bottom: 5px;
+        margin-top: 20px;
+    }
+}

@@ -1,22 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Test from "-cl/Header";
-import { Routes, Route, Link } from "react-router-dom";
-import { publicRouters } from "-cr/index";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { publicRouters, privateRouter } from "-cr/index";
+import GoogleMap from "-cp/GoogleMap/GoogleMap";
+import Header from "-cl/Header";
+import FormUser from "-cp/FormUser/FormUser";
+import Theme from "-cp/Theme/Theme";
+import "~/assets/style/global.scss";
 
-function App(props) {
+
+function App() {
+  const [isAuthenticate, setIsAuThenticate] = useState(true);
+  const location = useLocation();
+
   return (
-    <Routes>
-        {publicRouters.map((route, index) => {
-          console.log(route);
-          return (
-            <Route key={index} path={route.path} element={route.component}/>
-            // <Route key={index} path="/" element={<Test />} />
+    <React.Fragment>
+      {isAuthenticate && location.pathname !== "/login" && location.pathname !== "/theme" && <Header />}
+      <Routes> 
+          {/* {publicRouters.map((route, index) => {
+            return (
+              <Route key={index} path={route.path} element={route.component}/>
+            )
+          })} */}
+          <Route path="/login" element={<FormUser />}/>
+          <Route path="/theme" element={<Theme />}/>
 
-          )
-        })}
-        {/* <Route path="/" element={<Test />} />
-        <Route path="about" element={<Test />} /> */}
-    </Routes>
+          {/* Check auth */}
+          {
+          !isAuthenticate
+            ? <Route path="/" element={<Navigate replace to="/login" />} />
+            : privateRouter.map((route, index) => {
+              return (
+                <Route key={index} path={route.path} element={route.component}/>
+              )
+            })
+        }
+      </Routes> 
+    </React.Fragment>
   )
 }
 

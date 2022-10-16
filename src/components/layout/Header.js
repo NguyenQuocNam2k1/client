@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import { Person, Keyboard, Policy, Lock, Add, Search} from '@material-ui/icons/';
 import "~/assets/style/header.scss";
+import { useNavigate } from "react-router-dom";
 // import LogoutIcon from '@material-ui/icons/Logout';
 
 const listMenuAvatar = [
@@ -39,6 +40,7 @@ const listMenuAvatar = [
 
 function Header() {
   const [isAuthenticate, setIsAuThenticate] = useState(true);
+  const navigate = useNavigate();
   
   const clickAvatar = () => {
     const listMenu = document.querySelector(".info-icon-item-list");
@@ -48,7 +50,12 @@ function Header() {
   const renderMenuInfo = () => {
     return (
       <React.Fragment>
-        <Button variant="contained" mr="1rem" color="primary" startIcon={<Add />} disableElevation>
+        <Button 
+          onClick = {() => navigate("/create")}
+          variant="contained" 
+          mr="1rem" color="primary" startIcon={<Add />} 
+          disableElevation
+        >   
           Chuyến đi
         </Button>
         <div className="info-icon">

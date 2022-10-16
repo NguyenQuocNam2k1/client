@@ -331,4 +331,5 @@ export const listPlaceNew = [
       label:"Hà Nội",
       image:"#",
     },
-  ];
+];
+

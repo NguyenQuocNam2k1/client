@@ -124,3 +124,14 @@ body {
 .MuiListItemIcon-root, .MuiListItemAvatar-root{
     min-width: 28px !important;
 }
+.fabGreen{
+    color: white;
+    background-color: #4CAF50;
+    &:hover{
+      background-color: #4CAF50;
+    };
+}
+.layout-create{
+    background-color:#F5F5F5;
+    min-height: 100vh;
+}

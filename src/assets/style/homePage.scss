@@ -1,0 +1,53 @@
+.home-page{
+    &-item{
+        margin-bottom:20px;
+        margin-top: 15px;
+    }
+    .MuiPaper-root{
+        max-width: 100% !important;
+    }
+    .MuiCardHeader-avatar{
+        margin-right:0 !important;
+    }
+    .card-home{
+        box-shadow: none;
+        font-size: 14px;
+        &-header{
+            padding: 8px 0;
+            .MuiTypography-root{
+                font-size: 14px;
+                font-family: cursive;
+                font-weight: 600;
+                margin-top: 0 !important;
+            }
+            .MuiCardHeader-title{
+                margin-top: 3px;
+            }
+        }
+    }
+    .description-card, .hagtask-card{
+        font-size: 14px;
+        color: #888888;
+        font-weight: 600;
+        font-family: cursive
+    }
+    .hagtask-card{
+        color: black;
+        margin-bottom: 12px;
+    }
+    .icon-card{
+        margin-left: 12px;
+        position: relative;
+        &-item{
+            position: absolute;
+            bottom:0;
+            .MuiButtonBase-root{
+                background-color: #F5F5F5;
+                margin-top: 10px;
+                svg{
+                    fill: black;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,77 @@
+.sidebar{
+    font-size: 16px;
+    height: 100vh;
+    overflow-y:none;
+    &::-webkit-scrollbar-track{
+        position: absolute;
+        -webkit-box-shadow: inset 0 0 6px #ffffff;
+        border-radius: 10px;
+        background-color: #ffffff;
+    }
+
+    &::-webkit-scrollbar{
+        position: absolute;
+        width: 6px;
+        max-height: 30px;
+        background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar-thumb{
+        position: absolute;
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px #6495ED;
+        background-color: #6495ED;
+    }
+    &:hover{
+        overflow-y: auto;
+    }
+    #text_account_suggest{
+        line-height: 0;
+        margin-top:5px;
+    }
+    .MuiTypography-root{
+        margin-top:0 !important;
+    }
+    .list_user_suggest{
+        &:hover{
+            background-color:#F5F5F5;
+            cursor: pointer;
+            .MuiTypography-root{
+                color:var(--primary-high);
+            }
+        }
+    }
+    .text_show{
+        font-size: 14px;
+        padding-left: 16px;
+        padding-bottom: 8px;
+        font-weight: 500;
+        color: #0705b2;
+        &:hover{
+            color: var(--primary-high);
+            cursor: pointer;
+        }
+    }
+}
+.MuiTypography-body1{
+    font-size:16px !important;
+    font-weight:600 !important;
+}
+.MuiTypography-root {
+    margin-top: 5px !important;
+    margin-left: 10px !important;
+}
+
+.active_menu{
+    .MuiTypography-root {
+        margin-top: 5px !important;
+        margin-left: 10px !important;
+        color: var(--primary)
+    }
+    .MuiSvgIcon-root{
+        fill: var(--primary);
+    }
+}
+.MuiListItemAvatar-root{
+    min-width: 48px;
+}

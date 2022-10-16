@@ -8,12 +8,13 @@ import FormUser from "-cp/FormUser/FormUser";
 
 //Public router
 const publicRouters = [
-    { path: '/home', component: <Home />},
-    { path: '/login', component: <FormUser />},
+    { path: '/login', component: <FormUser />}
 ];
 
 //Private router
-const privateRouter = [];
+const privateRouter = [
+    { path: '/', component: Home},
+];
 
 
 

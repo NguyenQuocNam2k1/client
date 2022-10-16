@@ -6,6 +6,7 @@ import GoogleMap from "-cp/GoogleMap/GoogleMap";
 import Header from "-cl/Header";
 import FormUser from "-cp/FormUser/FormUser";
 import Theme from "-cp/Theme/Theme";
+import LayoutContent from "-cl/LayoutContent";
 import "~/assets/style/global.scss";
 
 
@@ -30,8 +31,13 @@ function App() {
           !isAuthenticate
             ? <Route path="/" element={<Navigate replace to="/login" />} />
             : privateRouter.map((route, index) => {
+              const Page = route.component;
               return (
-                <Route key={index} path={route.path} element={route.component}/>
+                <Route key={index} path={route.path} element={
+                  <LayoutContent>
+                    <Page />
+                  </LayoutContent>
+                }/>
               )
             })
         }

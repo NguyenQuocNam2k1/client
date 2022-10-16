@@ -56,17 +56,17 @@
                     position: absolute;
                     right: 0;
                     top: 50px;
-                    .MuiListItemIcon-root{
-                        min-width: 28px;
-                    }
                 }
             }
             .avatar:hover{
                 cursor: pointer;
             }
-            .menu-list-header{
+            .info-icon-item-list{
                 display:none;
             }
+        }
+        .show-list-menu{
+            display: block !important;
         }
         
     }

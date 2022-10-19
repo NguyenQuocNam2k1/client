@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import { Person, Keyboard, Policy, Lock, Add, Search} from '@material-ui/icons/';
 import "~/assets/style/header.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 // import LogoutIcon from '@material-ui/icons/Logout';
 
 const listMenuAvatar = [
@@ -24,7 +24,7 @@ const listMenuAvatar = [
     icon:<Person fontSize="medium"/>,
   },
   {
-    text:"Các chuyển đi",
+    text:"Chuyến đi của bạn",
     icon:<Keyboard fontSize="medium"/>
   },
   {
@@ -105,7 +105,9 @@ function Header() {
         className="header-item"
       >
         <Grid item xs={3}>
-          Logo
+          <Link to="/">
+            Logo
+          </Link>
         </Grid>
         <Grid item xs={5}>
           <div className="header-search">

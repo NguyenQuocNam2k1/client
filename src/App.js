@@ -6,6 +6,8 @@ import Theme from "-cp/Theme/Theme";
 import LayoutContent from "-cl/LayoutContent";
 import LayoutCreate from '-cl/LayoutCreat';
 import "~/assets/style/global.scss";
+import GoogleMap from "-cp/GoogleMap/GoogleMap";
+import ScrollTop from "-cl/ScrollTop";
 
 
 function App() {
@@ -22,6 +24,12 @@ function App() {
           })} */}
           <Route path="/login" element={<FormUser />}/>
           <Route path="/theme" element={<Theme />}/>
+          <Route path="/map" element={<GoogleMap />}/>
+          {publicRouters.map((routerPublic, index) => {
+            return (
+              <Route key={index} path={routerPublic.path} element={routerPublic.component}/>
+            )
+          })}
 
           {/* Check auth */}
           {
@@ -43,7 +51,7 @@ function App() {
             })
         }
       </Routes>
-
+      <ScrollTop />
     </React.Fragment>
   )
 }

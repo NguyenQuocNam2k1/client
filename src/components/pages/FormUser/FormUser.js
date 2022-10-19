@@ -28,8 +28,7 @@ const FormUser=()=>{
         <Grid className="form-user" style={{position: "relative"}}>
             <div className='form-user_background'></div>
             <Paper elevation={10} style={paperStyle} className="form-user_content">
-                <Grid align='
-                '>
+                <Grid align=''>
                     <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
                     <h2>{!checkTab ? "Đăng nhập" : "Đăng ký" }</h2>
                 </Grid>

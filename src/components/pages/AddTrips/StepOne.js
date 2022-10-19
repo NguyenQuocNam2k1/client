@@ -64,7 +64,18 @@ function StepOne() {
                 <TextField required id="standard-required" label="Số người đi" className="w-30" />
                 <TextField required id="standard-required" label="Số điện thoại" className="w-40" />
                 <TextField required id="standard-required" label="Chi phí / 1 người" className="w-40" />
-                <TextField required id="standard-required" label="Hashtags" className="w-50" />
+                <form className='w-50' noValidate>
+                  <TextField
+                    id="datetime-local"
+                    label="Thời gian đi"
+                    type="datetime-local"
+                    defaultValue="2017-05-24T10:30"
+                    // className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </form>
             </Grid>
         </Grid>
     </div>

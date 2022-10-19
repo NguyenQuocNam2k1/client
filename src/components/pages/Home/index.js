@@ -79,6 +79,122 @@ const Home = () => {
         </Card>
       </Grid>
       <Divider/>
+
+      <Grid container className="home-page-item">
+        <Card className="card-home">
+          <CardHeader
+            className="card-home-header"
+            avatar={
+              <Avatar aria-label="recipe" className={classes.avatar}>
+                R
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings">
+                <MoreVert />
+              </IconButton>
+            }
+            title="Nguyễn Quốc Nam"
+            subheader="16/10/2022"
+          />
+          <Grid item xs={10}>
+            <Typography variant="body2" className="description-card" color="textSecondary" component="p">
+                This impressive paella is a perfect party dish and a fun meal to cook together with your
+                guests. Add 1 cup of frozen peas along with the mussels, if you like.
+            </Typography>
+            <Typography variant="body2" className="hagtask-card" color="textSecondary" component="p">
+                #abc #def
+            </Typography>
+          </Grid>
+          <Grid container>
+            <Grid item xs={8}>
+              <CardMedia
+                className={classes.media}
+                image={Blog}
+                title="Paella dish"
+              />
+            </Grid>
+            <Grid item xs={1} className="icon-card">
+              <div className="icon-card-item">
+                <Tooltip title="Thích" placement="right">
+                  <IconButton aria-label="settings">
+                    <Favorite />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Bình luận" placement="right">
+                  <IconButton aria-label="settings">
+                    <Comment />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Chia sẻ" placement="right">
+                  <IconButton aria-label="settings">
+                    <Share />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </Grid>
+          </Grid>
+        </Card>
+      </Grid>
+      <Divider/>
+
+      <Grid container className="home-page-item">
+        <Card className="card-home">
+          <CardHeader
+            className="card-home-header"
+            avatar={
+              <Avatar aria-label="recipe" className={classes.avatar}>
+                R
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings">
+                <MoreVert />
+              </IconButton>
+            }
+            title="Nguyễn Quốc Nam"
+            subheader="16/10/2022"
+          />
+          <Grid item xs={10}>
+            <Typography variant="body2" className="description-card" color="textSecondary" component="p">
+                This impressive paella is a perfect party dish and a fun meal to cook together with your
+                guests. Add 1 cup of frozen peas along with the mussels, if you like.
+            </Typography>
+            <Typography variant="body2" className="hagtask-card" color="textSecondary" component="p">
+                #abc #def
+            </Typography>
+          </Grid>
+          <Grid container>
+            <Grid item xs={8}>
+              <CardMedia
+                className={classes.media}
+                image={Blog}
+                title="Paella dish"
+              />
+            </Grid>
+            <Grid item xs={1} className="icon-card">
+              <div className="icon-card-item">
+                <Tooltip title="Thích" placement="right">
+                  <IconButton aria-label="settings">
+                    <Favorite />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Bình luận" placement="right">
+                  <IconButton aria-label="settings">
+                    <Comment />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Chia sẻ" placement="right">
+                  <IconButton aria-label="settings">
+                    <Share />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </Grid>
+          </Grid>
+        </Card>
+      </Grid>
+      <Divider/>
     </div>
   );
 }

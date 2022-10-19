@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Stepper,  Step, StepLabel, Button} from '@material-ui/core';
+import { Stepper,  Step, StepLabel, Button , CircularProgress} from '@material-ui/core';
 import "~/assets/style/addTrip.scss";
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
 import StepThree from './StepThree';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,17 +26,22 @@ function getSteps() {
 
 function AddTrips() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
+  const [isLoading , setIsLoading] = useState(false);
   const steps = getSteps();
 
   const handleNext = () => {
+    if(activeStep === 2)  {
+      navigate("/");
+      return;
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-
 
   return (
     <div className='add-trip'>
@@ -60,7 +66,7 @@ function AddTrips() {
                     Back
                 </Button>
                 <Button variant="contained" color="primary" onClick={handleNext}>
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    {activeStep === steps.length - 1 ? "Hoàn thành" : 'Tiếp'}
                 </Button>
             </div>
             {/* )} */}

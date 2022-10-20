@@ -20,22 +20,22 @@ export default function Sidebar() {
       redirect:"/",
     },
     {
-      name:"Blogs",
+      name:"Tạo chuyến đi",
       icon:<PostAdd fontSize="large" />,
-      active: location.pathname.includes("blogs"),
-      redirect:"/blogs",
+      active: location.pathname.includes("create"),
+      redirect:"/create",
     },
     {
       name:"Lịch sử chuyến đi",
       icon:<History fontSize="large" />,
       active: location.pathname.includes("history"),
-      redirect:"/theme",
+      redirect:"/history",
     },
   ];
 
   //xu ly logic
-  const handleClickPage = () => {
-    navigate("/");
+  const handleClickPage = (router) => {
+    navigate(router);
   }
   return (
     <div className="sidebar">

@@ -14,7 +14,7 @@ function Theme() {
     setListConscious([...listConscious , value]);
   }
   const handleClickNext = () => {
-     navigate("/home");
+     navigate("/");
   }
   return (
     <div className="theme">

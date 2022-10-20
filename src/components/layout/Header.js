@@ -11,9 +11,10 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Divider
+  Divider,
+  Badge
 } from "@material-ui/core";
-import { Person, Keyboard, Policy, Lock, Add, Search} from '@material-ui/icons/';
+import { Person, Keyboard, Policy, Lock, Add, Search, Notifications} from '@material-ui/icons/';
 import "~/assets/style/header.scss";
 import { useNavigate, Link } from "react-router-dom";
 // import LogoutIcon from '@material-ui/icons/Logout';
@@ -22,19 +23,23 @@ const listMenuAvatar = [
   {
     text:"Xem thông tin",
     icon:<Person fontSize="medium"/>,
+    navigate:'/profile',
   },
   {
     text:"Chuyến đi của bạn",
-    icon:<Keyboard fontSize="medium"/>
+    icon:<Keyboard fontSize="medium"/>,
+    navigate:'/profile',
   },
   {
     text:"Chính sách, điều khoản",
     icon:<Policy fontSize="medium"/>,
-    divider:<Divider/>
+    divider:<Divider/>,
+    navigate:'/policy',
   },
   {
     text:"Đăng xuất",
-    icon:<Lock fontSize="small"/>
+    icon:<Lock fontSize="small"/>,
+    navigate:'/login',
   },
 ];
 
@@ -45,19 +50,23 @@ function Header() {
   const clickAvatar = () => {
     const listMenu = document.querySelector(".info-icon-item-list");
     listMenu.classList.toggle("show-list-menu");
+  };
+  const handleClickItem = (router) => {
+    navigate(router);
   }
 
   const renderMenuInfo = () => {
     return (
       <React.Fragment>
-        <Button 
+        {/* <Button 
           onClick = {() => navigate("/create")}
           variant="contained" 
           mr="1rem" color="primary" startIcon={<Add />} 
           disableElevation
         >   
           Chuyến đi
-        </Button>
+        </Button> */}
+        <Badge badgeContent={1000} max={999} color="primary" children={<Notifications />} />
         <div className="info-icon">
           {!isAuthenticate ? (
             <Button variant="contained" color="secondary">
@@ -73,7 +82,7 @@ function Header() {
                 <MenuList className="menu-list-header">
                   {listMenuAvatar.map((item, index) => {
                     return(
-                      <React.Fragment>
+                      <div onClick={() => handleClickItem(item.navigate)}>
                         <MenuItem key = {index}>
                           <ListItemIcon>
                             {item.icon}
@@ -83,7 +92,7 @@ function Header() {
                           </ListItemText>
                         </MenuItem>
                         {item.divider}
-                      </React.Fragment>
+                      </div>
                       )
                   })}
                   </MenuList>

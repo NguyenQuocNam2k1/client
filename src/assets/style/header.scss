@@ -8,9 +8,6 @@
         min-height: 60px;
         max-width: var(--default-layout-width);
         margin: auto;
-        .MuiGrid-item{
-            padding: 0 50px 0 0;
-        }
         .MuiFormControl-root{
             width: 90%;
             .MuiFilledInput-root{
@@ -47,6 +44,14 @@
         .header-info{
             display: flex;
             justify-content: end;
+            align-items: center;
+            .MuiBadge-root{
+                margin-right: 14px;
+                margin-top: 5px;
+            }
+            .MuiSvgIcon-root{
+                font-size: 30px;
+            }
             .info-icon{
                 margin-left: 20px;
             }
@@ -67,6 +72,7 @@
         }
         .show-list-menu{
             display: block !important;
+            z-index: 1;
         }
         
     }

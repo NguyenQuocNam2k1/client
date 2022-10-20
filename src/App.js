@@ -22,8 +22,8 @@ function App() {
               <Route key={index} path={route.path} element={route.component}/>
             )
           })} */}
-          <Route path="/login" element={<FormUser />}/>
-          <Route path="/theme" element={<Theme />}/>
+          {/* <Route path="/login" element={<FormUser />}/>
+          <Route path="/theme" element={<Theme />}/> */}
           <Route path="/map" element={<GoogleMap />}/>
           {publicRouters.map((routerPublic, index) => {
             return (
@@ -38,7 +38,7 @@ function App() {
             : privateRouter.map((route, index) => {
               const Page = route.component;
               let Layout = LayoutContent;
-              if(location.pathname.includes("create")){
+              if(location.pathname.includes("create") || location.pathname.includes("profile")){
                 Layout = LayoutCreate;
               }
               return (

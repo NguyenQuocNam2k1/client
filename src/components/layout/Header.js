@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  Badge
+  Badge,
 } from "@material-ui/core";
 import { Person, Keyboard, Policy, Lock, Add, Search, Notifications} from '@material-ui/icons/';
 import "~/assets/style/header.scss";
@@ -42,9 +42,27 @@ const listMenuAvatar = [
     navigate:'/login',
   },
 ];
+const listResult = [
+  "Nam Định",
+  "Hà Nam",
+  "Nam Định",
+  "Nam Định",
+  "Nam Định",
+  "Nam Định",
+  "Nam Định",
+];
+const listNoti = [
+  {name:"Hí hí", content:"Không có content"},
+  {name:"Hí hí", content:"Không có content"},
+  {name:"Hí hí", content:"Không có content"},
+  {name:"Hí hí", content:"Không có content"},
+  {name:"Hí hí", content:"Không có content"},
+]
 
 function Header() {
   const [isAuthenticate, setIsAuThenticate] = useState(true);
+  const [showResultSearch, setShowResultSearch] = useState(false);
+  const [valueSearch, setValueSearch] = useState('');
   const navigate = useNavigate();
   
   const clickAvatar = () => {
@@ -66,7 +84,6 @@ function Header() {
         >   
           Chuyến đi
         </Button> */}
-        <Badge badgeContent={1000} max={999} color="primary" children={<Notifications />} />
         <div className="info-icon">
           {!isAuthenticate ? (
             <Button variant="contained" color="secondary">
@@ -74,6 +91,8 @@ function Header() {
             </Button>
           ) : (
             <div className="info-icon-item">
+              <Badge badgeContent={1} max={999} color="primary" children={<Notifications />} className="header_icon_noti" />
+              {/* {renderListNotification()} */}
               {/* Avatar sẽ để theo tên mặc định của người dùng. Background sẽ random */}
               <Avatar className="avatar" onClick = {() => clickAvatar()}>
                 Nam
@@ -104,6 +123,60 @@ function Header() {
     );
   };
 
+  const renderResultSearch = () => {
+    return (
+      <React.Fragment>
+        <div className="result-search">
+          {listResult.map((item, index) => {
+            return (
+              <div className="result-search-item" key={index}>
+                  <Search fontSize="small" className="result-search-icon"/>
+                  <p className="result-search-text">Hà Nam</p>
+              </div>
+            )
+          })}
+        </div>
+      </React.Fragment>
+    )
+  };
+
+  const renderListNotification = () => {
+    return (
+      <div className="list_noti">
+        <p>Thông báo</p>
+        <Divider />
+        {listNoti.length && 
+          <div className="list_noi-item">
+            <Grid container>
+              <Grid item xs={2}>
+                <Avatar className="avatar">
+                  Nam
+                </Avatar>
+              </Grid>
+              <Grid item xs={10}>
+                <p>Nguyễn Quốc Nam</p>
+              </Grid>
+            </Grid>
+          </div>
+        }
+      </div>
+    )
+  }
+
+
+  //function xu ly logic
+  const handleSearch = (value) => {
+    setValueSearch(value);
+    if(!value){
+      return setShowResultSearch(false);
+    }
+    setShowResultSearch(true);
+  }
+  const handlBlurSearch = () => {
+    setValueSearch('');
+    setShowResultSearch(false);
+  }
+
   return (
     <AppBar position="static" className="header">
       {/* <Toolbar className="container-format"> */}
@@ -125,8 +198,12 @@ function Header() {
               label="Tìm kiếm chuyến đi của bạn"
               type="search"
               variant="filled"
+              value={valueSearch}
+              onChange={(e) => {handleSearch(e.target.value)}}
+              onBlur= {() => handlBlurSearch()}
             ></TextField>
             <SvgIcon component={Search} />
+            {showResultSearch && renderResultSearch()}
           </div>
         </Grid>
         <Grid item xs={4}>

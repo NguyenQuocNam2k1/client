@@ -3,6 +3,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    .MuiGrid-root{
+        text-align:center;
+    }
     &_content{
         height: fit-content !important;
         position: absolute;
@@ -29,5 +32,17 @@
     .MuiInput-formControl{
         margin-bottom: 5px;
         margin-top: 20px;
+    }
+    .layout_register{
+        .MuiGrid-root{
+            text-align:start;
+        }
+        .MuiFormControl-root{
+            margin: 0 !important;
+        }
+        .button-upload{
+            margin-top:12px;
+            margin-bottom: 12px;
+        }
     }
 }

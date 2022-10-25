@@ -21,8 +21,9 @@ import "~/assets/style/formUser.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { saveImage, register } from "~/redux/actions";
+import { saveImage, register, logIn } from "~/redux/actions";
 import Notification from "-cl/Notification";
+import setCookie from "-cc/cookie";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -43,12 +44,18 @@ const dataDefault = {
   sex: "",
 };
 
+const dataLoginDefault = {
+  name: "",
+  password:"",
+}
+
 const FormUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [checkTab, setCheckTab] = useState(1);
   const [dataRegister, setDatRegister] = useState(dataDefault);
+  const [dataLogin, setDataLogin] = useState(dataLoginDefault)
   const [showAlert, setShowAlert] = useState(0);
   const classes = useStyles();
   const [sex, setSex] = useState("");
@@ -69,6 +76,7 @@ const FormUser = () => {
           placeholder="Nhập họ và tên"
           fullWidth
           required
+          onChange={(e) => handleLogin(e.target.value, "name")}
           className="form-user_input"
         />
         <TextField
@@ -76,6 +84,7 @@ const FormUser = () => {
           placeholder="Nhập mật khẩu"
           type="password"
           fullWidth
+          onChange={(e) => handleLogin(e.target.value, "password")}
           required
           className="form-user_input"
         />
@@ -150,6 +159,9 @@ const FormUser = () => {
           />
           Upload
         </Button>
+        <div className="avatar-upload">
+          <img src="http://localhost/chuyen-de/backend/upload//avatar.jpg-1666717445771.jpg" alt="avatar"/>
+        </div>
       </Grid>
     );
   };
@@ -164,9 +176,14 @@ const FormUser = () => {
         if(result) setCheckTab(0);
       }, 2000)
     } else {
-      setTimeout(() => {
-        navigate("/theme");
-      }, 500);
+      const result = await logIn(dataLogin);
+      if(result){
+        setCookie();// name,data , number, 
+        // setTimeout(() => {
+        //   navigate("/theme");
+        // }, 500);
+      }
+
     }
     setIsLoading(false);
   };
@@ -185,17 +202,26 @@ const FormUser = () => {
         fileName: tempFile[0].name,
       };
       const result = await saveImage(params);
-      console.log(result);
+      if(result){
+        const newData = dataRegister;
+        newData['avatar'] = result;
+        setDatRegister(newData);
+      }
       //fix bugs upload 1 file with onchange twice
       e.target.value = null;
     }
   };
-  const handleEnterInfo = (value, filed) =>{
+  const handleEnterInfo = (value, field) =>{
     const newData = dataRegister;
-    newData[filed] = value;
-    if(filed === "sex") setSex(value)
+    newData[field] = value;
+    if(field === "sex") setSex(value)
     
     setDatRegister(newData);
+  }
+  const handleLogin = (value, field) => {
+    const infoUser = dataLogin;
+    infoUser[field] = value;
+    setDataLogin(infoUser);
   }
 
 

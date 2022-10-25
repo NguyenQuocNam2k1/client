@@ -1,14 +1,14 @@
-// import { UserTypes } from "../constants/action-types";
-// import { setCookie } from "component/config/cookie";
+import * as types from "../constants";
 
 const initialState = {
-    dataUser: "100",
-    stRegister: false,
-    loading:false,
+    dataUser: '',
 }
 
 export const userReducer = (state = initialState, { type, payload }) => {
     switch (type) {
+        case types.Login:
+            console.log(payload);
+            break;
         default:
             return state;
     }

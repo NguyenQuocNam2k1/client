@@ -8,3 +8,13 @@ export const register = async (data) => {
     }
     return false;
 }
+
+export const logIn = async (data, dispatch) => { 
+    const response = await api.post("/api/user/logIn" , data);
+    console.log(response);
+    if(response.status === 200){
+        dispatch({ type: types.Login, payload: response.data });
+        return true;
+    };
+    return false;
+}

@@ -10,8 +10,8 @@ export const saveImage = async (data) => {
           'Content-Type': 'multipart/form-data'
         }
     });
-    if(response){
-        return true;
+    if(response.data){
+        return response.data;
     }
     return false;
 }

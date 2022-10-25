@@ -12,7 +12,7 @@
         "hooks/*"
       ],
       "~r/*": [
-        "src/redux/*"
+        "redux/*"
       ],
       "-cc/*": [
         "src/components/core/*"

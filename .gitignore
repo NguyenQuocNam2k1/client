@@ -9,7 +9,7 @@ admin/build
 **/facebook-chat.liquid**
 **/omg-facebook-chat_style.css**
 **/.env**
-upload/
+uploads/
 
 # testing
 /coverage

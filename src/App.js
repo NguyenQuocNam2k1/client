@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { publicRouters, privateRouter } from "-cr/index";
-import FormUser from "-cp/FormUser/FormUser";
-import Theme from "-cp/Theme/Theme";
 import LayoutContent from "-cl/LayoutContent";
 import LayoutCreate from '-cl/LayoutCreat';
 import "~/assets/style/global.scss";
@@ -11,7 +9,7 @@ import ScrollTop from "-cl/ScrollTop";
 
 
 function App() {
-  const [isAuthenticate, setIsAuThenticate] = useState(true);
+  const [isAuthenticate, setIsAuThenticate] = useState(false);
   const location = useLocation();
 
   return (

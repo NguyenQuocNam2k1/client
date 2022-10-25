@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapGL , {GeolocateControl, Marker, NavigationControl, Popup} from 'react-map-gl';
 import {Room} from '@material-ui/icons/';
-import useFetch from '~/hooks/useFetch';
 import 'mapbox-gl/dist/mapbox-gl.css'; 
 
 //config

@@ -164,3 +164,20 @@ body {
   	text-overflow: ellipsis;
   	margin-top:10px;
 }
+
+.notification{
+    display: flex;
+    align-items: center;
+    min-height: fit-content;
+}
+.notification-rl{
+  animation: animationAlertRL 1.2s ease-in-out;
+}
+@keyframes animationAlertRL{
+  from {right: -30%;}
+  to {right: 0px;}
+}
+.icon_alert{
+  float: left !important;
+  margin-top:6px;
+}

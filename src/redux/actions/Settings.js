@@ -1,4 +1,4 @@
-import * as types from "../constants";
+import { settingType} from "../constants";
 import axios from "axios";
 import {api} from "~/apis";
 
@@ -12,6 +12,20 @@ export const saveImage = async (data) => {
     });
     if(response.data){
         return response.data;
+    }
+    return false;
+}
+
+export const actGetTheme = (data) => {
+    return async (dispatch) => {
+        dispatch({type: settingType.GET_THEME, payload: data})
+    }
+}
+
+export const saveTheme = async (data) => { 
+    const response = await api.post("/api/user/saveTheme", data);
+    if(response.data.status === 200){
+        return true;
     }
     return false;
 }

@@ -26,6 +26,16 @@
         display: flex;
         width:100vw;
         justify-content: center;
+        &-layout{
+            border-radius: 22px;
+            background-color: white;
+            .title-theme{
+                text-align: center;
+                margin-top: 12px;
+                font-size: 24px;
+                color: rgb(11, 28, 131);
+            }
+        }
         &-item{
             width: 50vw;
             min-height: 45vh;
@@ -33,9 +43,9 @@
             padding: 20px 15px 0 30px;
             display: flex;
             flex-wrap: wrap;
-            background-color: white;
-            border-radius: 22px;
+            justify-content: center;
             p{
+                color:white;
                 margin-right: 8px;
                 text-align: center;
                 height:fit-content;
@@ -44,6 +54,9 @@
                 height: fit-content;
                 border-radius: inherit !important;
                 font-size: 14px !important;
+            }
+            .MuiSvgIcon-root{
+                padding-top:6px;
             }
         }
     }

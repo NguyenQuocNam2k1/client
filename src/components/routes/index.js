@@ -13,7 +13,7 @@ import Profile from "-cp/Profile/Profile";
 //Public router
 const publicRouters = [
     { path: '/login', component: <FormUser />},
-    { path: '/theme', component: <Theme />},
+    { path: '/theme', component: <Theme /> },
 ];
 
 //Private router

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Paper,
@@ -20,10 +20,10 @@ import { LockOutlined, CloudUpload } from "@material-ui/icons";
 import "~/assets/style/formUser.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveImage, register, logIn } from "~/redux/actions";
 import Notification from "-cl/Notification";
-import setCookie from "-cc/cookie";
+// import setCookie from "-cc/cookie";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -42,23 +42,28 @@ const dataDefault = {
   phone: "",
   avatar: "",
   sex: "",
+  email:"",
 };
 
 const dataLoginDefault = {
   name: "",
   password:"",
+  email:"",
 }
 
 const FormUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [checkTab, setCheckTab] = useState(1);
+  const [checkTab, setCheckTab] = useState(0);
   const [dataRegister, setDatRegister] = useState(dataDefault);
-  const [dataLogin, setDataLogin] = useState(dataLoginDefault)
+  const [dataLogin, setDataLogin] = useState(dataLoginDefault);
   const [showAlert, setShowAlert] = useState(0);
   const classes = useStyles();
   const [sex, setSex] = useState("");
+
+  const {dataUser, token} = useSelector((state) => state.users);
+
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -71,6 +76,14 @@ const FormUser = () => {
   const renderLayoutLogin = () => {
     return (
       <React.Fragment>
+        <TextField
+          label="Email"
+          placeholder="Nhập email"
+          fullWidth
+          required
+          onChange={(e) => handleLogin(e.target.value, "email")}
+          className="form-user_input"
+        />
         <TextField
           label="Họ và tên"
           placeholder="Nhập họ và tên"
@@ -92,17 +105,29 @@ const FormUser = () => {
     );
   };
 
-  const renderLayoutRegiter = () => {
+  const renderLayoutRegister = () => {
     return (
-      <Grid container className="layout_register">
-        <TextField
-          label="Họ và tên"
-          placeholder="Nhập họ và tên"
-          fullWidth
-          required
-          className="form-user_input"
-          onChange={(e) => handleEnterInfo(e.target.value, "name")}
-        />
+      <Grid container className="layout_register" style={{paddingRight:"8px"}}>
+        <Grid item xs={6}>
+          <TextField
+            label="Họ và tên"
+            placeholder="Nhập họ và tên"
+            fullWidth
+            required
+            className="form-user_input"
+            onChange={(e) => handleEnterInfo(e.target.value, "name")}
+          />
+        </Grid>
+        <Grid item xs={6} style={{paddingLeft:"8px"}}>
+          <TextField
+            label="Email"
+            placeholder="Nhập email"
+            fullWidth
+            required
+            className="form-user_input"
+            onChange={(e) => handleEnterInfo(e.target.value, "email")}
+          />
+        </Grid>
         <TextField
           label="Mật khẩu"
           placeholder="Nhập mật khẩu"
@@ -176,16 +201,11 @@ const FormUser = () => {
         if(result) setCheckTab(0);
       }, 2000)
     } else {
-      const result = await logIn(dataLogin);
-      if(result){
-        setCookie();// name,data , number, 
-        // setTimeout(() => {
-        //   navigate("/theme");
-        // }, 500);
-      }
-
+      dispatch(logIn(dataLogin));
     }
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000)
   };
 
   const handleSelectTab = (e, type) => {
@@ -224,6 +244,17 @@ const FormUser = () => {
     setDataLogin(infoUser);
   }
 
+  //useEffect
+  useEffect(() => {
+    if(dataUser && token){
+      if(dataUser.theme.length > 0){
+        navigate("/");
+      } else {
+        navigate("/theme");
+      }
+    }
+  },[dataUser, navigate, token])
+
 
   return (
     <Grid className="form-user" style={{ position: "relative" }}>
@@ -235,7 +266,7 @@ const FormUser = () => {
           </Avatar>
           <h2>{!checkTab ? "Đăng nhập" : "Đăng ký"}</h2>
         </Grid>
-        {!checkTab ? renderLayoutLogin() : renderLayoutRegiter()}
+        {!checkTab ? renderLayoutLogin() : renderLayoutRegister()}
         {isLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
@@ -269,7 +300,7 @@ const FormUser = () => {
       <div className="alert-register">
         {/* 0 là ẩn đi , 1 là thành công , 2 là thất bại */}
         {showAlert === 1 && <Notification  className="position-relative" severity="success" title="Đăng ký thành công" classAnimation="notification-rl"/>}
-        {showAlert === 2 && <Notification  className="position-relative" severity="eroe" title="Đăng ký không thành công" classAnimation="notification-rl"/>}
+        {showAlert === 2 && <Notification  className="position-relative" severity="error" title="Đăng ký không thành công" classAnimation="notification-rl"/>}
       </div>
     </Grid>
   );

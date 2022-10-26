@@ -1,293 +1,98 @@
 export const listTheme = [
     {
         name:"Hà Nội",
-        color:"",
+        color:"#008467",
         key:"ha_noi"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Hà Nam",
+        color:"#0062ff",
+        key:"ha_nam"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Ninh Bình",
+        color:"#0A769E",
+        key:"ninh_binh"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Hà Tĩnh",
+        color:"#008467",
+        key:"ha_tinh"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Hà Giang",
+        color:"#0062ff",
+        key:"ha_giang"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Hải Dương",
+        color:"#0A769E",
+        key:"hai_duong"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Hải Phòng",
+        color:"#008467",
+        key:"hai_phong"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Quảng Ninh",
+        color:"#0062ff",
+        key:"quang_ninh"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Lào Cai",
+        color:"#0A769E",
+        key:"lao_cai"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Thanh Hóa",
+        color:"#008467",
+        key:"thanh_hoa"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Bắc Ninh",
+        color:"#0062ff",
+        key:"bac_ninh"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Hòa Bình",
+        color:"#0A769E",
+        key:"hoa_binh"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Tây Nguyên",
+        color:"#008467",
+        key:"tay_nguyen"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Thái Nguyên",
+        color:"#0062ff",
+        key:"thai_nguyen"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Lai Châu",
+        color:"#0A769E",
+        key:"lai_chau"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Sơn La",
+        color:"#008467",
+        key:"son_la"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Phú Thọ",
+        color:"#0062ff",
+        key:"phu_tho"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Cao Bằng",
+        color:"#0A769E",
+        key:"cao_bang"
     },
     {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
-    },
-    {
-        name:"Hà Nội",
-        color:"",
-        key:"ha_noi"
+        name:"Khác",
+        color:"#008467",
+        key:"other"
     },
 ];
 

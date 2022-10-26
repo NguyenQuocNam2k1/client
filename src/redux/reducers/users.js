@@ -1,15 +1,27 @@
-import * as types from "../constants";
+import { UserType } from "../constants";
+import { setCookie } from "-cc/cookie";
 
 const initialState = {
-    dataUser: '',
+    dataUser: "",
+    token: "",
 }
 
-export const userReducer = (state = initialState, { type, payload }) => {
+export default function userReducer(state = initialState, { type, payload }){
+    let newState = {...state};
     switch (type) {
-        case types.Login:
-            console.log(payload);
-            break;
+        case UserType.LOGIN :
+            setCookie('CD_token', payload.data.token , 1);
+            setCookie('CD_email', payload.data.user.email , 1);
+            newState.dataUser = payload.data.user;
+            newState.token = payload.data.token;
+            return newState;
+        case UserType.FETCH_INFO:
+            newState.dataUser = payload.data;
+            return newState;
+        case UserType.GET_THEME:
+                newState.dataUser = payload.data;
+                return newState;    
         default:
-            return state;
+            return newState;
     }
 }

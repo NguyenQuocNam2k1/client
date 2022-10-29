@@ -18,7 +18,6 @@ function App() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.users.token);
 
-
   const getUserInfo = (email) => {
     dispatch(getUser({email}));
   }

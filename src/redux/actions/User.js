@@ -1,6 +1,16 @@
 import { UserType } from "../constants/index";
 import {api} from "~/apis";
 
+
+//update redux
+export const actFetchUserInfo = (data) => {
+    return async (dispatch) => {
+        dispatch({type: UserType.FETCH_INFO, payload: data})
+    }
+}
+
+
+//call api
 export const register = async (data) => {
     const response = await api.post("/api/user/register", data);
     if(response){
@@ -31,3 +41,10 @@ export const getUser = (data) =>{
     }
 }
 
+export const updateUserInfo = async (data) => {
+    const response = await api.post("/api/user/updateUser", data);
+    if(response){
+        return true;
+    }
+    return false;
+}

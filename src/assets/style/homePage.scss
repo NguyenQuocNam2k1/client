@@ -29,6 +29,9 @@
         color: #888888;
         font-weight: 600;
     }
+    .description-card{
+
+    }
     .hagtask-card{
         color: black;
         margin-bottom: 12px;
@@ -46,6 +49,14 @@
                     fill: black;
                 }
             }
+        }
+    }
+    .MuiCardHeader-action{
+        margin-right: 0;
+    }
+    .icon_like{
+        svg {
+            fill: var(--primary-high) !important;
         }
     }
 }

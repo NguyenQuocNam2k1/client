@@ -1,19 +1,21 @@
 import React , {useState , useEffect} from 'react';
 import "~/assets/style/theme.scss";
 import DoneIcon from '@material-ui/icons/Done';
-import { Button, CircularProgress } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { listTheme } from "-cc/data";
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from "-cc/cookie";
 import { getUser, actGetTheme, saveTheme } from "~/redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
+import Loading from "-cl/Loading";
 
 
 function Theme() {
   const navigate = useNavigate();  
   const dispatch = useDispatch();
   const {dataUser} = useSelector((state) => state.users);
+  const [loading, setLoading] = useState(false)
 
   const getUserInfo = (email) => {
     dispatch(getUser({email}));
@@ -29,14 +31,20 @@ function Theme() {
     dispatch(actGetTheme(newData))
   }
   const handleClickNext = async () => {
+    setLoading(true);
     let params = {
         themeNew : dataUser['theme'],
         email : dataUser['email'],
         name: dataUser['name']
     }
     const result = await saveTheme(params);
-    if(result)  navigate("/");
-    
+    if(result) {
+        return setTimeout(() => {
+            setLoading(false);
+            navigate("/");
+        }, 1000);
+    };
+    setLoading(false)
   }
   useEffect(() => {
     const auth = getCookie("CD_token");
@@ -66,6 +74,8 @@ function Theme() {
                                     </p>
                                 )
                             })}
+                            {
+                             loading ? <Loading  /> :
                             <Button variant="contained" 
                             className="theme-content-item-button" 
                             color="primary" 
@@ -75,13 +85,14 @@ function Theme() {
                             >
                                 Tiếp tục
                             </Button>
+                            }
                         </div>
                     </div>
                 </div>
 
             </div>
         </div> :
-      <CircularProgress  /> 
+      <Loading /> 
     }
     </>
   )

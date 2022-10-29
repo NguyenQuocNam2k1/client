@@ -1,16 +1,22 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemIcon, ListItemText, Divider, ListSubheader, ListItemAvatar, Avatar } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { List, ListItem, ListItemIcon, ListItemText, Divider, ListSubheader, ListItemAvatar, Avatar, CircularProgress } from '@material-ui/core';
 import { Home, PostAdd, History, Image } from '@material-ui/icons';
 import "~/assets/style/sidebar.scss";
 import { useLocation, useNavigate } from 'react-router-dom';
 import ChipsSelect from './ChipsSelect';
 import { listPlaceNew } from '../core/data';
+import { getUsers, getPosts } from "~/redux/actions"; 
+import { useDispatch, useSelector } from 'react-redux';
+import moment from "moment";
 
 
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const {dataUser} = useSelector((state) => state.users);
+  const { listUserSuggest, listUserOld} = useSelector((state) => state.pages);
+  const dispatch = useDispatch();
+  
   
   const listPage = [
     {
@@ -31,85 +37,105 @@ export default function Sidebar() {
       active: location.pathname.includes("history"),
       redirect:"/history",
     },
-  ];
-
+  ]; 
   //xu ly logic
   const handleClickPage = (router) => {
     navigate(router);
   }
+
+  //useEffect
+  useEffect(() => {
+    if(!dataUser) return;
+    const params = {
+      email : dataUser.email
+    }
+    dispatch(getUsers(params));
+  },[dataUser]);
+
   return (
-    <div className="sidebar">
-      {/* List Page */}
-      <List component="nav" aria-label="main mailbox folders">
-        {listPage.map((page, index) => {
-          return (
-            <ListItem button key={index}
-             className={`${page.active ? "active_menu" : ""}`}
-             onClick = {() => handleClickPage(page.redirect)}
-            >
-              <ListItemIcon>
-                {page.icon}
-              </ListItemIcon>
-              <ListItemText primary={page.name} />
+    <>
+    {
+     !listUserSuggest && !listUserOld ? <CircularProgress  /> : 
+      <div className="sidebar">
+        {/* List Page */}
+        <List component="nav" aria-label="main mailbox folders">
+          {listPage.map((page, index) => {
+            return (
+              <ListItem button key={index}
+              className={`${page.active ? "active_menu" : ""}`}
+              onClick = {() => handleClickPage(page.redirect)}
+              >
+                <ListItemIcon>
+                  {page.icon}
+                </ListItemIcon>
+                <ListItemText primary={page.name} />
+              </ListItem>
+            )
+          })}
+        </List>
+
+        <Divider />
+        <List 
+          component="nav" 
+          aria-label="secondary mailbox folders"
+          subheader={
+            <ListSubheader component="div" id="nested-list-subheader" style={{fontSize:"14px", lineHeight:"40px"}}>
+              Những tài khoản được đề xuất
+            </ListSubheader>
+          }
+        >
+          {listUserSuggest.map((user, index) => {
+            return (
+            <ListItem className="list_user_suggest" key={index}>
+              <ListItemAvatar>
+                <Avatar src={user.avatar} alt="avatar_user.email" />
+              </ListItemAvatar>
+              <ListItemText primary={user.name} secondary={moment(user.create_at, "YYYY-MM-DDTHH:mm:ss.SSS").format("DD-MM-YYYY")} />
             </ListItem>
-          )
-        })}
-      </List>
+            )
+          })}
+        </List>
+        <p className="text_show">Xem tất cả</p>
 
-      <Divider />
-      <List 
-        component="nav" 
-        aria-label="secondary mailbox folders"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader" style={{fontSize:"14px", lineHeight:"40px"}}>
-            Những tài khoản được đề xuất
-          </ListSubheader>
-        }
-      >
-        <ListItem className="list_user_suggest">
-          <ListItemAvatar>
-            <Avatar>
-              <Image />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Nguyễn Quốc Nam" secondary="Jan 9, 2014" />
-        </ListItem>
-      </List>
-      <p className="text_show">Xem tất cả</p>
+        <Divider />
+        <List 
+          component="nav" 
+          aria-label="secondary mailbox folders"
+          subheader={
+            <ListSubheader component="div" id="nested-list-subheader" style={{fontSize:"14px", lineHeight:"40px"}}>
+              Những người bạn đã đồng hành
+            </ListSubheader>
+          }
+        >
+          {listUserOld.map((user, index) => {
+            return (
+            <ListItem className="list_user_suggest" key={index}>
+              <ListItemAvatar>
+                <Avatar>
+                  <Image />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={user.name_user} secondary={moment(user.create_at, "YYYY-MM-DDTHH:mm:ss.SSS").format("DD-MM-YYYY")} />
+            </ListItem>
+            )
+          })}
+        </List>
+        <p className="text_show">Xem thêm</p>
 
-      <Divider />
-      <List 
-        component="nav" 
-        aria-label="secondary mailbox folders"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader" style={{fontSize:"14px", lineHeight:"40px"}}>
-            Những người bạn đã đồng hành
-          </ListSubheader>
-        }
-      >
-        <ListItem className="list_user_suggest">
-          <ListItemAvatar>
-            <Avatar>
-              <Image />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Nguyễn Quốc Nam" secondary="Jan 9, 2014" />
-        </ListItem>
-      </List>
-      <p className="text_show">Xem thêm</p>
-
-      <Divider />
-      <List 
-        component="nav" 
-        aria-label="secondary mailbox folders"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader" style={{fontSize:"14px", lineHeight:"40px"}}>
-            Khám phá những địa điểm mới
-          </ListSubheader>
-        }
-      >
-        <ChipsSelect chips={listPlaceNew}/>
-      </List>
-    </div>
+        <Divider />
+        <List 
+          component="nav" 
+          aria-label="secondary mailbox folders"
+          subheader={
+            <ListSubheader component="div" id="nested-list-subheader" style={{fontSize:"14px", lineHeight:"40px"}}>
+              Khám phá những địa điểm mới
+            </ListSubheader>
+          }
+        >
+          <ChipsSelect chips={listPlaceNew}/>
+        </List>
+      </div>
+    }
+    </>
   );
 }

@@ -52,6 +52,9 @@
             cursor: pointer;
         }
     }
+    .MuiListSubheader-sticky{
+        position:unset;
+    }
 }
 .MuiTypography-body1{
     font-size:16px !important;

@@ -1,76 +1,57 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useEffect, useRef } from 'react';
-import MapGL , {GeolocateControl, Marker, NavigationControl, Popup} from 'react-map-gl';
-import {Room} from '@material-ui/icons/';
-import 'mapbox-gl/dist/mapbox-gl.css'; 
+import React, { useState, useEffect, useRef } from "react";
+import mapboxgl from "mapbox-gl";
+import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 
 //config
 const initView = {
   latitude: 21.000274477955738,
   longitude: 105.84253138495198,
-  zoom: 16
+  zoom: 16,
 };
 
+mapboxgl.accessToken = process.env.REACT_APP_MAP_TOKEN;
+
 function StepTwo(props) {
-  const [viewPort, setViewPort] = useState(initView);
-  const [showPopup, togglePopup] = useState(false);
-  const mapRef = useRef();
-  
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [lng, setLng] = useState(105.845);
+  const [lat, setLat] = useState(20.9997);
+  const [zoom, setZoom] = useState(16);
+
   useEffect(() => {
-    
-  },[])
+    if (map.current) return; // initialize map only once
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [lng, lat],
+      zoom: zoom,
+    });
+
+    var directions = new MapboxDirections({
+      accessToken: mapboxgl.accessToken,
+      unit: "metric",
+      profile: "mapbox/cycling",
+    });
+
+    map.current.addControl(directions, "top-right");
+  });
+
+  useEffect(() => {
+    if (!map.current) return; // wait for map to initialize
+    map.current.on("move", () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
+    });
+  });
   return (
-    <MapGL  
-       ref={mapRef}
-       initialViewState={viewPort} 
-       style={{width: "100%", height: "50vh"}} 
-       mapStyle="mapbox://styles/mapbox/streets-v11" 
-       mapboxAccessToken={process.env.REACT_APP_MAP_TOKEN}
-       onViewPortChange={() => console.log(123)}
-    >
-      {/* Popup of marker */}
-      {showPopup && (
-        <Popup
-          latitude={21.000274477955738}
-          longitude={105.84253138495198}
-          closeButton={true}
-          closeOnClick={true}
-          onClose={() => togglePopup(false)}
-          anchor="top-right"
-        >
-          <div>Pop up marker</div>
-        </Popup>
-      )}
-      <Marker
-        latitude={21.000274477955738}
-        longitude={105.84253138495198}
-        // offsetLeft={-20}
-        // offsetTop={-30}
-      >
-        <div onClick={() => togglePopup(true)}>
-          <Room color="primary" fontSize="large"/>
-        </div>
-      </Marker>
-      {/* <Marker
-        latitude={21.000274477955738}
-        longitude={105.84253138495198}
-        offsetLeft={-20}
-        offsetTop={-30}
-      >
-        <img
-          style={{ height: 50, width: 50 }}
-          src="https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png"
-        />
-      </Marker> */}
-      <NavigationControl position="bottom-right" />
-      <GeolocateControl 
-        position='top-left' 
-        trackUserLocation
-        onGeolocate={(e) => console.log(e)}
-      />
-      {/* <Geocoder /> */}
-    </MapGL >
-  )
+    <div>
+      <div ref={mapContainer} className="map-container" />
+    </div>
+  );
 }
 
-export default StepTwo
+export default StepTwo;

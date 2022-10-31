@@ -37,7 +37,7 @@ function AddTrips() {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
   // const [dataTrip, setDataTrip] = useState(dataDefault);
   const dataTrip = useSelector((state) => state.pages.newTrip);
 

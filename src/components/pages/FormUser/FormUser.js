@@ -7,8 +7,6 @@ import {
   TextField,
   Typography,
   Link,
-  FormControlLabel,
-  Checkbox,
   Box,
   CircularProgress,
   FormControl,

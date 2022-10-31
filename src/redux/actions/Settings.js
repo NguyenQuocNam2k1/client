@@ -16,6 +16,15 @@ export const saveImage = async (data) => {
     return false;
 }
 
+export const deleteImage = async (data) => {
+    console.log(data);
+    const response = await api.post("api/upload/deleteImage",{data});
+    if(response.data){
+        console.log(response.data);
+    };
+    return false;
+}
+
 export const actGetTheme = (data) => {
     return async (dispatch) => {
         dispatch({type: settingType.GET_THEME, payload: data})

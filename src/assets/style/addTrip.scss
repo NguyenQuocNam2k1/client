@@ -89,4 +89,24 @@
     .mapboxgl-ctrl-logo{
         display: none;
     }
+    .layout_img_trip{
+        width: 100%;
+        height: 100%;
+        padding: 4px;
+        position: relative;
+        img{
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+    }
+    .icon_delete_image{
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        &:hover{
+            cursor: pointer;
+            fill: var(--primary-high);
+        }
+    }
 }

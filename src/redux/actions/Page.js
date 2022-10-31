@@ -1,8 +1,12 @@
 import { pageType } from "../constants";
-import axios from "axios";
 import {api} from "~/apis";
 
 //update redux
+export const actFetchNewTrip = (data) => {
+    return async (dispatch) => {
+        dispatch({type: pageType.GET_NEW_TRIP, payload: data})
+    }
+}
 
 //call api
 export const getUsers = (params) =>{
@@ -27,3 +31,10 @@ export const getTrips = () =>{
     }
 }
 
+export const getSearch = async (params) => { 
+    const response = await api.get("/api/page/search", {params});
+    if(response.data.status === 200){
+        return response.data;
+    }
+    return false;
+}

@@ -17,4 +17,5 @@ export const settingType = {
 export const pageType = {
     GET_USERS : "GET_USERS",
     GET_TRIPS : "GET_TRIPS",
+    GET_NEW_TRIP: "GET_NEW_TRIP"
 }

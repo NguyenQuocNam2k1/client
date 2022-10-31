@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable no-undef */
+import React, { useRef, useState } from "react";
 import {
   Grid,
   AppBar,
@@ -13,11 +14,13 @@ import {
   ListItemText,
   Divider,
   Badge,
+  CircularProgress 
 } from "@material-ui/core";
 import { Person, Keyboard, Policy, Lock, Add, Search, Notifications} from '@material-ui/icons/';
 import "~/assets/style/header.scss";
 import { useNavigate, Link } from "react-router-dom";
-// import LogoutIcon from '@material-ui/icons/Logout';
+import { getSearch } from "~/redux/actions";
+import { useDispatch } from "react-redux";
 
 const listMenuAvatar = [
   {
@@ -42,15 +45,7 @@ const listMenuAvatar = [
     navigate:'/login',
   },
 ];
-const listResult = [
-  "Nam Định",
-  "Hà Nam",
-  "Nam Định",
-  "Nam Định",
-  "Nam Định",
-  "Nam Định",
-  "Nam Định",
-];
+
 const listNoti = [
   {name:"Hí hí", content:"Không có content"},
   {name:"Hí hí", content:"Không có content"},
@@ -63,7 +58,11 @@ function Header() {
   const [isAuthenticate, setIsAuThenticate] = useState(true);
   const [showResultSearch, setShowResultSearch] = useState(false);
   const [valueSearch, setValueSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [resultSearch, setResultSearch] = useState("");
   const navigate = useNavigate();
+  const timeRef = useRef(null);
+  const dispatch = useDispatch();
   
   const clickAvatar = () => {
     const listMenu = document.querySelector(".info-icon-item-list");
@@ -127,11 +126,22 @@ function Header() {
     return (
       <React.Fragment>
         <div className="result-search">
-          {listResult.map((item, index) => {
+          <p className="result-search-friend">Những người bạn</p>
+          {resultSearch && resultSearch.listUserSearch.map((item, index) => {
             return (
               <div className="result-search-item" key={index}>
                   <Search fontSize="small" className="result-search-icon"/>
-                  <p className="result-search-text">Hà Nam</p>
+                  <p className="result-search-text">{item.name}</p>
+              </div>
+            )
+          })}
+          <Divider />
+          <p className="result-search-trip">Những chuyến đi</p>
+          {resultSearch && resultSearch.listTripSearch.map((item, index) => {
+            return (
+              <div className="result-search-item" key={index}>
+                  <Search fontSize="small" className="result-search-icon"/>
+                  <p className="result-search-text">{item.title}</p>
               </div>
             )
           })}
@@ -163,18 +173,40 @@ function Header() {
     )
   }
 
+  const fetchSearch = async (value) => {
+    const params = {
+      valueSearch : value
+    }
+    const result = await getSearch(params);
+    if(result) {
+      setShowResultSearch(true);
+      setResultSearch(result.data);
+    };
+    setIsLoading(false);
+  }
 
   //function xu ly logic
-  const handleSearch = (value) => {
+  const handleSearch =  (value) => {
     setValueSearch(value);
-    if(!value){
-      return setShowResultSearch(false);
-    }
-    setShowResultSearch(true);
+    clearTimeout(timeRef.current);
+    timeRef.current = setTimeout(() => {
+      setIsLoading(true);
+      setTimeout(() => {
+        fetchSearch(value);
+      }, 1000)
+    }, 1000);
+    // if(!value){
+    //   return setShowResultSearch(false);
+    // }
+    // setShowResultSearch(true);
   }
-  const handlBlurSearch = () => {
+  const handleBlurSearch = () => {
     setValueSearch('');
     setShowResultSearch(false);
+  }
+  const handleKeyDown = (e) => {
+    if(e.keyCode === 14)
+    console.log(123);
   }
 
   return (
@@ -200,9 +232,10 @@ function Header() {
               variant="filled"
               value={valueSearch}
               onChange={(e) => {handleSearch(e.target.value)}}
-              onBlur= {() => handlBlurSearch()}
+              onBlur= {() => handleBlurSearch()}
+              onKeyDown = {(e) => handleKeyDown(e)}
             ></TextField>
-            <SvgIcon component={Search} />
+            {isLoading ? <CircularProgress className="loading-search"/> : <SvgIcon component={Search} />}
             {showResultSearch && renderResultSearch()}
           </div>
         </Grid>

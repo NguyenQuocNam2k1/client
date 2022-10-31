@@ -35,7 +35,7 @@
                 width: 30px;
                 height: 30px;
                 fill: #D0D0D0;
-                margin-top: 10px;
+                margin-top: 6px;
                 margin-left: 5px;
                 &:hover{
                     cursor: pointer;
@@ -129,5 +129,21 @@
             font-size: 12px;
             font-weight: 500;
         }
+    }
+    .loading-search{
+        width: 20px !important;
+        height: 20px !important;
+        text-align: center;
+        margin-top: 11px;
+        margin-left: 10px;
+    }
+    .result-search-friend, .result-search-trip{
+        color: var(--primary-dark);
+        font-size: 12px;
+        margin-left: 6px;
+        font-weight: 600;
+    }
+    .result-search-trip{
+        margin-top: 4px;
     }
 }

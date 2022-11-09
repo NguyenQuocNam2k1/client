@@ -48,3 +48,27 @@ export const updateUserInfo = async (data) => {
     }
     return false;
 }
+
+export const getUserById = (params) =>{
+    return async (dispatch) => {
+        const response = await api.get("/api/user/getUsersById",{params});
+        if(Number(response.data.status) === 200){
+            dispatch({type: UserType.GET_USER_BY_ID, payload: response.data})
+            return true;
+        };
+        return false;
+    }
+}
+
+
+export const UpdateUserById = (params) => {
+    return async (dispatch) => {
+        const response = await api.get("/api/user/UpdateUserById",{params});
+        console.log(response);
+        if(Number(response.data.status) === 200){
+            dispatch({type: UserType.GET_USER_BY_ID, payload: response.data})
+            return true;
+        };
+        return false;
+    }
+}

@@ -8,11 +8,10 @@ function LayoutContent({ children }) {
   return (
     <>
       <Header />
-      <Grid container className="container-format" style={{marginTop:"30px"}}>
+      <Grid container spacing={3} className="container-format" style={{marginTop:"30px"}}>
           <Grid item xs={3}>
               <SideBar />
           </Grid>
-          <Grid item xs={1}></Grid>
           <Grid item xs={8}>
               {children}
           </Grid>

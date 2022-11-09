@@ -8,6 +8,7 @@ import AddTrips from "-c/pages/AddTrips/AddTrips";
 import FormUser from "-cp/FormUser/FormUser";
 import History from "-cp/History/History";
 import Profile from "-cp/Profile/Profile";
+import TripDetail from "-cp/TripDetail";
 
 
 //Public router
@@ -21,7 +22,8 @@ const privateRouter = [
     { path: '/', component: Home},
     { path: '/create', component: AddTrips},
     { path: '/history', component: History},
-    { path: '/profile', component: Profile},
+    { path: '/profile/:slug', component: Profile},
+    { path: '/trips/:slug', component: TripDetail},
 ];
 
 

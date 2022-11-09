@@ -14,7 +14,7 @@ export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const {dataUser} = useSelector((state) => state.users);
-  const { listUserSuggest, listUserOld} = useSelector((state) => state.pages);
+  const { listUserSuggest} = useSelector((state) => state.pages);
   const dispatch = useDispatch();
   
   
@@ -39,9 +39,9 @@ export default function Sidebar() {
     },
   ]; 
   //xu ly logic
-  const handleClickPage = (router) => {
+  const handleClickItem = (router) => {
     navigate(router);
-  }
+  };
 
   //useEffect
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function Sidebar() {
   return (
     <>
     {
-     !listUserSuggest && !listUserOld ? <CircularProgress  /> : 
+     !listUserSuggest ? <CircularProgress  /> : 
       <div className="sidebar">
         {/* List Page */}
         <List component="nav" aria-label="main mailbox folders">
@@ -63,7 +63,7 @@ export default function Sidebar() {
             return (
               <ListItem button key={index}
               className={`${page.active ? "active_menu" : ""}`}
-              onClick = {() => handleClickPage(page.redirect)}
+              onClick = {() => handleClickItem(page.redirect)}
               >
                 <ListItemIcon>
                   {page.icon}
@@ -86,7 +86,7 @@ export default function Sidebar() {
         >
           {listUserSuggest.map((user, index) => {
             return (
-            <ListItem className="list_user_suggest" key={index}>
+            <ListItem className="list_user_suggest" key={index} onClick = {() => handleClickItem(`/profile/id=${user._id}`)}>
               <ListItemAvatar>
                 <Avatar src={user.avatar} alt="avatar_user.email" />
               </ListItemAvatar>
@@ -97,7 +97,7 @@ export default function Sidebar() {
         </List>
         <p className="text_show">Xem tất cả</p>
 
-        <Divider />
+        {/* <Divider />
         <List 
           component="nav" 
           aria-label="secondary mailbox folders"
@@ -108,8 +108,9 @@ export default function Sidebar() {
           }
         >
           {listUserOld.map((user, index) => {
+            console.log(user);
             return (
-            <ListItem className="list_user_suggest" key={index}>
+            <ListItem className="list_user_suggest" key={index} onClick = {() => handleClickItem(`/profile/id=${user._id}`)}>
               <ListItemAvatar>
                 <Avatar>
                   <Image />
@@ -120,7 +121,7 @@ export default function Sidebar() {
             )
           })}
         </List>
-        <p className="text_show">Xem thêm</p>
+        <p className="text_show">Xem thêm</p> */}
 
         <Divider />
         <List 

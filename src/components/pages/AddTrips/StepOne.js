@@ -11,11 +11,10 @@ import {
 import { CloudUpload, ClearOutlined } from "@material-ui/icons/";
 import { useDispatch, useSelector } from "react-redux";
 import { saveImage, actFetchNewTrip, deleteImage } from "~/redux/actions";
-
+import moment from "moment";
 
 const StepOne = ({dataTrip, handleEnterData}) => {
   const [openCarType, setOpenCarType] = useState(false);
-  const { dataUser } = useSelector((state) => state.users);
   const { newTrip } = useSelector((state) => state.pages);
   const dispatch = useDispatch();
 
@@ -52,8 +51,8 @@ const StepOne = ({dataTrip, handleEnterData}) => {
   //Handle update image
   const handleUpdateImage = async (e) => {
     const tempFile = Array.from(e.target.files);
-    const dataTrip = newTrip
     if (tempFile[0] && tempFile[0]?.size < 5000000) {
+      const dataTrip = {...newTrip};
       let params = {
         file: tempFile[0],
         fileName: tempFile[0].name,
@@ -61,7 +60,7 @@ const StepOne = ({dataTrip, handleEnterData}) => {
       const result = await saveImage(params);
       dataTrip['url_image'] = JSON.stringify(result.data);
       params = {
-        data: newTrip,
+        data: dataTrip,
       }
       dispatch(actFetchNewTrip(params));
       
@@ -70,13 +69,16 @@ const StepOne = ({dataTrip, handleEnterData}) => {
     }
   };
 
-  const handleDeleteImage = () => {
+  const handleDeleteImage = async () => {
     const urlFile = JSON.parse(newTrip.url_image)?.urlFile;
+    await deleteImage({urlFile});
+
+    const dataTrip = {...newTrip};
+    dataTrip['url_image'] = '';
     const params = {
-      urlFile
+      data: dataTrip,
     }
-    console.log(urlFile);
-    dispatch(deleteImage(params))
+    dispatch(actFetchNewTrip(params));
   }
 
   return (
@@ -94,7 +96,7 @@ const StepOne = ({dataTrip, handleEnterData}) => {
                 <label>
                   <input
                     hidden
-                    accept="image/png, image/jpeg, image/jpg"
+                    accept="image/png, image/jpeg, image/jpg image/webp"
                     type="file"
                     onChange={handleUpdateImage}
                     name="myImage"
@@ -158,7 +160,7 @@ const StepOne = ({dataTrip, handleEnterData}) => {
               id="datetime-local"
               label="Thời gian đi"
               type="datetime-local"
-              defaultValue="2017-05-24T10:30"
+              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
               // className={classes.textField}
               InputLabelProps={{
                 shrink: true,

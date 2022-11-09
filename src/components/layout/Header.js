@@ -21,30 +21,8 @@ import "~/assets/style/header.scss";
 import { useNavigate, Link } from "react-router-dom";
 import { getSearch } from "~/redux/actions";
 import { useDispatch } from "react-redux";
-
-const listMenuAvatar = [
-  {
-    text:"Xem thông tin",
-    icon:<Person fontSize="medium"/>,
-    navigate:'/profile',
-  },
-  {
-    text:"Chuyến đi của bạn",
-    icon:<Keyboard fontSize="medium"/>,
-    navigate:'/profile',
-  },
-  {
-    text:"Chính sách, điều khoản",
-    icon:<Policy fontSize="medium"/>,
-    divider:<Divider/>,
-    navigate:'/policy',
-  },
-  {
-    text:"Đăng xuất",
-    icon:<Lock fontSize="small"/>,
-    navigate:'/login',
-  },
-];
+import Logo from "~/assets/image/logo.webp";
+import { useSelector } from "react-redux";
 
 const listNoti = [
   {name:"Hí hí", content:"Không có content"},
@@ -62,7 +40,31 @@ function Header() {
   const [resultSearch, setResultSearch] = useState("");
   const navigate = useNavigate();
   const timeRef = useRef(null);
-  const dispatch = useDispatch();
+  const { dataUser } = useSelector((state) => state.users);
+
+  const listMenuAvatar = [
+    {
+      text:"Xem thông tin",
+      icon:<Person fontSize="medium"/>,
+      navigate:`/profile/id=${dataUser._id}`,
+    },
+    {
+      text:"Chuyến đi của bạn",
+      icon:<Keyboard fontSize="medium"/>,
+      navigate:`/profile/id=${dataUser._id}`,
+    },
+    {
+      text:"Chính sách, điều khoản",
+      icon:<Policy fontSize="medium"/>,
+      divider:<Divider/>,
+      navigate:'/policy',
+    },
+    {
+      text:"Đăng xuất",
+      icon:<Lock fontSize="small"/>,
+      navigate:'/login',
+    },
+  ];
   
   const clickAvatar = () => {
     const listMenu = document.querySelector(".info-icon-item-list");
@@ -127,9 +129,15 @@ function Header() {
       <React.Fragment>
         <div className="result-search">
           <p className="result-search-friend">Những người bạn</p>
+          {
+           resultSearch.listUserSearch.length === 0 && 
+           <div className="result-search-not-found">
+            Không tìm thấy người dùng phù hợp
+           </div>
+          }
           {resultSearch && resultSearch.listUserSearch.map((item, index) => {
             return (
-              <div className="result-search-item" key={index}>
+              <div className="result-search-item" key={index} onClick={() => handleClickValueSearch(`/profile/id=${item._id}`)}>
                   <Search fontSize="small" className="result-search-icon"/>
                   <p className="result-search-text">{item.name}</p>
               </div>
@@ -137,9 +145,15 @@ function Header() {
           })}
           <Divider />
           <p className="result-search-trip">Những chuyến đi</p>
+          {
+            resultSearch.listTripSearch.length === 0 && 
+           <div className="result-search-not-found">
+            Không tìm thấy chuyến đi phù hợp
+           </div>
+          }
           {resultSearch && resultSearch.listTripSearch.map((item, index) => {
             return (
-              <div className="result-search-item" key={index}>
+              <div className="result-search-item" key={index} onClick={() => handleClickValueSearch(`/trips/id=${item._id}`)}>
                   <Search fontSize="small" className="result-search-icon"/>
                   <p className="result-search-text">{item.title}</p>
               </div>
@@ -186,6 +200,12 @@ function Header() {
   }
 
   //function xu ly logic
+  const handleClickValueSearch = (router) => {
+    setValueSearch('');
+    setShowResultSearch(false);
+    window.location.replace(router);
+  }
+
   const handleSearch =  (value) => {
     setValueSearch(value);
     clearTimeout(timeRef.current);
@@ -220,7 +240,7 @@ function Header() {
       >
         <Grid item xs={3}>
           <Link to="/">
-            Logo
+            <img src="https://danangaz.com/wp-content/uploads/2018/01/Untitled-1-01-300x129.png" className="logo" alt="logo"/>
           </Link>
         </Grid>
         <Grid item xs={5}>
@@ -232,8 +252,8 @@ function Header() {
               variant="filled"
               value={valueSearch}
               onChange={(e) => {handleSearch(e.target.value)}}
-              onBlur= {() => handleBlurSearch()}
-              onKeyDown = {(e) => handleKeyDown(e)}
+              // onBlur= {() => handleBlurSearch()}
+              // onKeyDown = {(e) => handleKeyDown(e)}
             ></TextField>
             {isLoading ? <CircularProgress className="loading-search"/> : <SvgIcon component={Search} />}
             {showResultSearch && renderResultSearch()}

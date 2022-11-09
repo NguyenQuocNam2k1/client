@@ -5,9 +5,8 @@ const ModalSweet = (
   icon,
   title,
   text,
-  showDenyButton,
   showCancelButton,
-  confirmButtonText,
+  confirmButtonText
 ) => {
   return (
     <>
@@ -21,6 +20,8 @@ const ModalSweet = (
         hideClass: {
           popup: "animate__animated animate__fadeOutUp",
         },
+        // showCancelButton: true,
+        // confirmButtonText: confirmButtonText ? "Lưu" : "",
       })}
     </>
   );

@@ -24,16 +24,22 @@
             }
         }
     }
-    .description-card, .hagtask-card{
-        font-size: 14px;
-        color: #888888;
-        font-weight: 600;
+    .filed-card{
+        color:black;
     }
     .description-card{
-
+        min-width: 60px;
     }
+    .description-card, .hagtask-card{
+        font-size: 14px;
+        font-weight: 600;
+        margin-left: 4px;
+    }
+    .content-card-trip{
+        display: flex;
+    }
+
     .hagtask-card{
-        color: black;
         margin-bottom: 12px;
     }
     .icon-card{

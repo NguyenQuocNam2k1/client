@@ -17,8 +17,7 @@ export const saveImage = async (data) => {
 }
 
 export const deleteImage = async (data) => {
-    console.log(data);
-    const response = await api.post("api/upload/deleteImage",{data});
+    const response = await api.post("api/upload/deleteImage",data);
     if(response.data){
         console.log(response.data);
     };

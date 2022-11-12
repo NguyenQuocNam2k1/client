@@ -120,13 +120,59 @@
   .list_noti {
     position: absolute;
     top: 50px;
-    border: 1px solid;
+    /* border: 1px solid; */
     width: 100%;
-    padding: 8px 0;
+    padding: 8px 0 0 0;
+    right: 70px;
+    height: fit-content;
     background-color: white;
+    box-shadow: 0px 4px 23px rgba(0, 0, 0, 0.15);
+    z-index: 99;
+    width: 370px;
+    border-radius: 8px;
+    height: 400px;
+    overflow-y: auto;
+    .MuiList-padding{
+      padding: 0 !important;
+    }
     p {
-      font-size: 12px;
+      font-size: 16px;
+      color:var(--primary-dark);
       font-weight: 500;
+      margin: 8px 12px;
+    }
+    .info-noti-list{
+      box-shadow: none;
+      border-radius: 8px;
+      .img-notification{
+        width: 50px;
+        height: 50px;
+      }
+      .notify-item{
+        border-bottom: 2px solid #c9c0c033;
+        padding: 0 8px 8px 8px;
+      }
+    }
+    .title-noti{
+      font-size:12px;
+      width: 100%;
+      color: black;
+      word-wrap: break-word;
+    }
+    .btn-noti{
+      &-item{
+        padding: 6px;
+        font-size: 10px !important;
+        border-radius: 3px;
+        margin-right: 4px;
+        font-weight: 400;
+      }
+      .agree{
+        background-color: #008467;
+      }
+      .cancel{
+        background-color: #DC3545;
+      }
     }
   }
   .loading-search {

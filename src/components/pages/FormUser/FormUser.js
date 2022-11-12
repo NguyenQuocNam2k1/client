@@ -14,14 +14,15 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { LockOutlined, CloudUpload } from "@material-ui/icons";
+import { LockOutlined, CloudUpload, Clear } from "@material-ui/icons";
 import "~/assets/style/formUser.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveImage, register, logIn } from "~/redux/actions";
+import { saveImage, register, logIn, deleteImage,actFetchDataRegister } from "~/redux/actions";
 import Notification from "-cl/Notification";
-// import setCookie from "-cc/cookie";
+import ModalSweet from "~/components/layout/ModalSweet";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -34,14 +35,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const dataDefault = {
-  name: "",
-  password: "",
-  phone: "",
-  avatar: "",
-  sex: "",
-  email:"",
-};
 
 const dataLoginDefault = {
   name: "",
@@ -49,18 +42,28 @@ const dataLoginDefault = {
   email:"",
 }
 
+const dataRegisterDefault = {
+  name: "",
+  password:"",
+  email:"",
+  avatar:{
+    urlFile:"",
+    urlImage: "",
+  },
+  sex:"female",
+}
+
 const FormUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [checkTab, setCheckTab] = useState(0);
-  const [dataRegister, setDatRegister] = useState(dataDefault);
+  const [checkTab, setCheckTab] = useState(1);
   const [dataLogin, setDataLogin] = useState(dataLoginDefault);
   const [showAlert, setShowAlert] = useState(0);
   const classes = useStyles();
   const [sex, setSex] = useState("");
 
-  const {dataUser, token} = useSelector((state) => state.users);
+  const {dataUser, token, dataRegister} = useSelector((state) => state.users);
 
   const paperStyle = {
     padding: 20,
@@ -69,8 +72,108 @@ const FormUser = () => {
     margin: "20px auto",
   };
   const avatarStyle = { backgroundColor: "#1bbd7e" };
-  const btnstyle = { margin: "8px 0" };
+  const btnstyle = { margin: "22px 0 12px 0" };
 
+  const checkFieldUser = (type="login") => {
+    let filedRequire = ["name", "password", "email"];
+
+    let checkField = false;
+    for (const [key, value] of Object.entries(filedRequire)) {
+      if(!dataLogin[value] && type === "login"){
+        checkField = true;
+        break;
+      } 
+      if(!dataRegister[value] && type === "register"){
+        checkField = true;
+        break;
+      }
+    }
+    return checkField;
+  } 
+
+  const handleClickLogin = async () => {
+    if(checkTab){
+      const checkFieldRequired = checkFieldUser("login");
+      if(checkFieldRequired){
+        ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin đăng ký");
+        return;
+      }
+      setIsLoading(true);
+      const result = await register(dataRegister);
+      setShowAlert(result ? 1 : 2);
+      setTimeout(() => {
+        setShowAlert(0);
+        if(result) {
+         dispatch(actFetchDataRegister(dataRegisterDefault));
+          setCheckTab(0);
+        };
+      }, 2000)
+    } else {
+      const checkFieldRequired = checkFieldUser("register");
+      if(checkFieldRequired){
+        ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin đăng nhập");
+        return;
+      }
+      setIsLoading(true);
+      dispatch(logIn(dataLogin));
+    }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000)
+  };
+
+  const handleSelectTab = (e, type) => {
+    e.preventDefault();
+    setCheckTab(type);
+  };
+
+  //Handle update image
+  const handleUpdateImage = async (e) => {
+    const tempFile = Array.from(e.target.files);
+    if (tempFile[0] && tempFile[0]?.size < 5000000) {
+      const params = {
+        file: tempFile[0],
+        fileName: tempFile[0].name,
+      };
+      const result = await saveImage(params);
+      if(result){
+        const newData = dataRegister;
+        newData['avatar'] = result.data;
+        dispatch(actFetchDataRegister(newData))
+
+      }
+      //fix bugs upload 1 file with onchange twice
+      e.target.value = null;
+    }
+  };
+
+  const handleEnterInfo = (value, field) =>{
+    const newData = dataRegister;
+    newData[field] = value;
+    if(field === "sex") setSex(value)
+    
+    dispatch(actFetchDataRegister(newData))
+  }
+
+  const handleLogin = (value, field) => {
+    const infoUser = dataLogin;
+    infoUser[field] = value;
+    setDataLogin(infoUser);
+  }
+
+  const handleDeleteAvatar = async () => {
+    const newData = dataRegister;
+    const urlFile = dataRegister.avatar.urlFile;
+    newData['avatar'] = {
+      urlFile:"",
+      urlImage: "",
+    };
+    await deleteImage({urlFile});
+    dispatch(actFetchDataRegister(newData));
+  }
+
+
+  //function render
   const renderLayoutLogin = () => {
     return (
       <React.Fragment>
@@ -165,82 +268,32 @@ const FormUser = () => {
           />
         </Grid>
         {/* upload image */}
-
-        <Button
-          variant="contained"
-          color="default"
-          className="button-upload"
-          component="label"
-          startIcon={<CloudUpload />}
-        >
-          <input
-            hidden
-            accept="image/png, image/jpeg, image/jpg"
-            type="file"
-            onChange={handleUpdateImage}
-            name="myImage"
-          />
-          Upload
-        </Button>
-        <div className="avatar-upload">
-          <img src="http://localhost/chuyen-de/backend/upload//avatar.jpg-1666717445771.jpg" alt="avatar"/>
-        </div>
+        {!dataRegister.avatar?.urlImage ? 
+          <Button
+            variant="contained"
+            color="default"
+            className="button-upload"
+            component="label"
+            startIcon={<CloudUpload />}
+          >
+            <input
+              hidden
+              accept="image/png, image/jpeg, image/jpg"
+              type="file"
+              onChange={handleUpdateImage}
+              name="myImage"
+            />
+            Upload
+          </Button> :
+          <div className="avatar-upload">
+            <Clear className="avatar-upload-icon" onClick={() => handleDeleteAvatar()}/>
+            <img src="http://localhost/chuyen-de/backend/upload/robot.png-1667315235214.png" alt="avatar"/>
+          </div>
+        }
       </Grid>
     );
   };
 
-  const handleClickLogin = async () => {
-    setIsLoading(true);
-    if(checkTab){
-      const result = await register(dataRegister);
-      setShowAlert(result ? 1 : 2);
-      setTimeout(() => {
-        setShowAlert(0);
-        if(result) setCheckTab(0);
-      }, 2000)
-    } else {
-      dispatch(logIn(dataLogin));
-    }
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000)
-  };
-
-  const handleSelectTab = (e, type) => {
-    e.preventDefault();
-    setCheckTab(type);
-  };
-
-  //Handle update image
-  const handleUpdateImage = async (e) => {
-    const tempFile = Array.from(e.target.files);
-    if (tempFile[0] && tempFile[0]?.size < 5000000) {
-      const params = {
-        file: tempFile[0],
-        fileName: tempFile[0].name,
-      };
-      const result = await saveImage(params);
-      if(result){
-        const newData = dataRegister;
-        newData['avatar'] = result;
-        setDatRegister(newData);
-      }
-      //fix bugs upload 1 file with onchange twice
-      e.target.value = null;
-    }
-  };
-  const handleEnterInfo = (value, field) =>{
-    const newData = dataRegister;
-    newData[field] = value;
-    if(field === "sex") setSex(value)
-    
-    setDatRegister(newData);
-  }
-  const handleLogin = (value, field) => {
-    const infoUser = dataLogin;
-    infoUser[field] = value;
-    setDataLogin(infoUser);
-  }
 
   //useEffect
   useEffect(() => {
@@ -285,13 +338,13 @@ const FormUser = () => {
           <Typography className="form-user_register">
             {" "}
             Bạn chưa có tài khoản ?{" "}
-            <Link onClick={(e) => handleSelectTab(e, 1)}>ĐĂNG KÝ</Link>
+            <Link onClick={(e) => handleSelectTab(e, 1)} style={{margin: "0 !important"}}>ĐĂNG KÝ</Link>
           </Typography>
         ) : (
           <Typography className="form-user_register">
             {" "}
             Bạn đã có tài khoản ?{" "}
-            <Link onClick={(e) => handleSelectTab(e, 0)}>ĐĂNG NHẬP</Link>
+            <Link onClick={(e) => handleSelectTab(e, 0)} style={{margin: "0 !important"}}>ĐĂNG NHẬP</Link>
           </Typography>
         )}
       </Paper>

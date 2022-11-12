@@ -9,7 +9,9 @@ import { getCookie } from "-cc/cookie";
 import ScrollTop from "-cl/ScrollTop";
 import { getUser } from "~/redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
+import io from "socket.io-client";
 
+const socket = io.connect("http://localhost:8000/");
 
 function App() {
   const [isAuthenticate, setIsAuThenticate] = useState(false);
@@ -17,6 +19,7 @@ function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.users.token);
+  const { dataUser } = useSelector((state) => state.users);
 
   const getUserInfo = (email) => {
     dispatch(getUser({email}));
@@ -32,6 +35,12 @@ function App() {
       getUserInfo(email);
     }
   },[token]);
+
+  //connect socket io
+  useEffect(() => {
+    console.log(socket);
+    socket.emit("connect_socket", dataUser);
+  },[])
   return (
     <React.Fragment>
       <Routes> 

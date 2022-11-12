@@ -8,6 +8,11 @@ export const actFetchUserInfo = (data) => {
         dispatch({type: UserType.FETCH_INFO, payload: data})
     }
 }
+export const actFetchDataRegister = (data) => {
+    return async (dispatch) => {
+        dispatch({type: UserType.FETCH_DATA_USER_REGISTER, payload: data})
+    }
+}
 
 
 //call api

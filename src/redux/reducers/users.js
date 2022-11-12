@@ -5,6 +5,16 @@ const initialState = {
   dataUser: "",
   token: "",
   userInfo: "",
+  dataRegister:{
+    name: "",
+    password:"",
+    email:"",
+    avatar:{
+      urlFile:"",
+      urlImage: "",
+    },
+    sex:"female",
+  }
 };
 
 export default function userReducer(state = initialState, { type, payload }) {
@@ -24,6 +34,9 @@ export default function userReducer(state = initialState, { type, payload }) {
       return newState;
     case UserType.GET_USER_BY_ID:
       newState.userInfo = payload.data;
+      return newState;
+    case UserType.FETCH_DATA_USER_REGISTER:
+      newState.dataRegister = payload;
       return newState;
     default:
       return newState;

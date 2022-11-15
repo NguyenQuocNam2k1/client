@@ -7,6 +7,11 @@ export const actFetchNewTrip = (data) => {
         dispatch({type: pageType.GET_NEW_TRIP, payload: data})
     }
 }
+export const actFetchTotalNoti = (data) => {
+    return async (dispatch) => {
+        dispatch({type: pageType.FETCH_TOTAL_NOTIFICATION, payload: data});
+    }
+}
 
 //call api
 export const getUsers = (params) =>{
@@ -67,4 +72,34 @@ export const getTripHistory = (params) =>{
         };
         return false;
     }
+}
+
+export const getTripCreated = (params) =>{
+    return async (dispatch) => {
+        const response = await api.get("/api/page/getTripCreated",{params});
+        if(Number(response.data.status) === 200){
+            dispatch({type: pageType.GET_TRIP_CREATED, payload: response.data})
+            return true;
+        };
+        return false;
+    }
+}
+
+export const getNotification = (params) => {
+    return async (dispatch) => {
+        const response = await api.get("/api/page/getNotification",{params});
+        if(Number(response.data.status) === 200){
+            dispatch({type: pageType.GET_NOTIFICATION, payload: response.data})
+            return true;
+        };
+        return false;
+    }
+}
+
+export const updateNotification = async (params) => { 
+    const response = await api.post("/api/page/updateNotification", params);
+    if(response.data.status === 200){
+        return response.data;
+    }
+    return false;
 }

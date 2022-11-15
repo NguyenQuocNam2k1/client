@@ -38,7 +38,6 @@ function App() {
 
   //connect socket io
   useEffect(() => {
-    console.log(socket);
     socket.emit("connect_socket", dataUser);
   },[])
   return (
@@ -60,8 +59,8 @@ function App() {
               }
               return (
                 <Route key={index} path={route.path} element={
-                  <Layout>
-                    <Page />
+                  <Layout socket={socket}>
+                    <Page socket={socket}/>
                   </Layout>
                 }/>
               )

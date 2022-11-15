@@ -5,6 +5,7 @@ const initialState = {
   resultTripSearch : "",
   listTrip: "",
   listTripHistory: "",
+  listTripCreated: [],
   newTrip: {
     author_info: "",
     title: "",
@@ -22,6 +23,8 @@ const initialState = {
     count_like: 0,
     trip_info: ""
   },
+  listNotification: "",
+  totalNotification: 0,
 };
 
 export default function pageReducer(state = initialState, { type, payload }) {
@@ -41,9 +44,21 @@ export default function pageReducer(state = initialState, { type, payload }) {
         newState.listTripHistory = payload.data;
         return newState; 
     case pageType.GET_TRIP_SEARCH:
-      console.log(payload)
         newState.resultTripSearch = payload.data;
-        return newState;    
+        return newState;
+    case pageType.GET_TRIP_CREATED:
+        newState.listTripCreated = payload.data;
+        return newState;
+    case pageType.GET_NOTIFICATION:
+        newState.listNotification = payload.data.listNoti;
+        newState.totalNotification = payload.data.total;
+        return newState;  
+    case pageType.FETCH_TOTAL_NOTIFICATION:
+        newState.totalNotification = 0;
+        return newState;   
+    case pageType.FETCH_TOTAL_LIST_NOTI:
+        newState.listNotification = payload.data;
+        return newState;         
     default:
       return newState;
   }

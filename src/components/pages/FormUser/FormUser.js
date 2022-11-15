@@ -93,7 +93,7 @@ const FormUser = () => {
 
   const handleClickLogin = async () => {
     if(checkTab){
-      const checkFieldRequired = checkFieldUser("login");
+      const checkFieldRequired = checkFieldUser("register");
       if(checkFieldRequired){
         ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin đăng ký");
         return;
@@ -109,13 +109,14 @@ const FormUser = () => {
         };
       }, 2000)
     } else {
-      const checkFieldRequired = checkFieldUser("register");
+      const checkFieldRequired = checkFieldUser("login");
       if(checkFieldRequired){
         ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin đăng nhập");
         return;
       }
       setIsLoading(true);
-      dispatch(logIn(dataLogin));
+      const result = dispatch(logIn(dataLogin));
+      console.log(result);
     }
     setTimeout(() => {
       setIsLoading(false);

@@ -6,7 +6,6 @@ import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import { useDispatch, useSelector } from "react-redux";
-import { ClickAwayListener } from "@material-ui/core";
 import { actFetchNewTrip } from "~/redux/actions";
 
 //config
@@ -177,9 +176,7 @@ function StepTwo({ handleEnterData }) {
     });
 
     directions.on("route", async (event) => {
-      const reports = document.getElementById("reports");
-      reports.innerHTML = "";
-      const report = reports.appendChild(document.createElement("div"));
+   
       // Add IDs to the routes
       const routes = await event.route.map((route, index) => ({
         ...route,
@@ -188,21 +185,23 @@ function StepTwo({ handleEnterData }) {
 
       // set info trip
       const dataTrip = { ...newTrip };
-      const tripDetail = routes[0].legs[0].steps;
-      let measure = document.querySelector(".mapbox-directions-multiple");
-      let time = measure.querySelector("h1").textContent;
-      let distance = measure.querySelector("span").textContent;
+      let measure = await document.querySelector(".mapbox-directions-multiple");
+      let time = "";
+      let distance = ""
+      if(measure){
+        time = await measure.querySelector("h1").textContent;
+        distance = await measure.querySelector("span").textContent;
+      }
 
-      const place = document.querySelectorAll(".mapboxgl-ctrl-geocoder");
-      const startPlace = place[0].querySelector("input").value;
-      const endPlace = place[1].querySelector("input").value;
+      const place = await document.querySelectorAll(".mapboxgl-ctrl-geocoder");
+      const startPlace = await place[0].querySelector("input").value;
+      const endPlace = await place[1].querySelector("input").value;
 
       dataTrip["start_place"] = startPlace;
       dataTrip["end_place"] = endPlace;
       dataTrip["trip_info"] = JSON.stringify({
         time: time,
         distance: distance,
-        tripDetail: JSON.stringify(tripDetail),
       });
       const params = {
         data: dataTrip,
@@ -235,8 +234,6 @@ function StepTwo({ handleEnterData }) {
         // eslint-disable-next-line no-undef
         const isClear = turf.booleanDisjoint(obstacle, routeLine) === true;
 
-        report.className = isClear ? "item" : "item warning";
-
         if (isClear) {
           map.current.setPaintProperty(
             `route${route.id}`,
@@ -250,7 +247,6 @@ function StepTwo({ handleEnterData }) {
             "#de2d26"
           );
         }
-        report.id = `report-${route.id}`;
       }
     });
   }, [lat, lng, zoom]);
@@ -267,7 +263,6 @@ function StepTwo({ handleEnterData }) {
   return (
     <div className="step2">
       <div id="map" ref={mapContainer} className="map-container"></div>
-      <div id="reports" className="reports"></div>
     </div>
   );
 }

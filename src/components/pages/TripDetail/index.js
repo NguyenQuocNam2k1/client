@@ -78,8 +78,6 @@ const Home = () => {
     await updateUserInfo(params);
   };
 
-  console.log(resultTripSeach);
-
   const handleClickRegister = (data) => {
     setIsShowModalRegister(true);
     setTripInfo(data);
@@ -168,7 +166,7 @@ const Home = () => {
                             color="textSecondary"
                             component="p"
                           >
-                            {trip.start_at}
+                            {moment(trip.start_at, "YYYY-MM-DDTHH:mm:ss.SSS").format("DD-MM-YYYY")}
                           </Typography>
                         </div>
                         <div className="content-card-trip">

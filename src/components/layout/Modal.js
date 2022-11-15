@@ -19,7 +19,7 @@ import { FileCopy } from "@material-ui/icons";
 import ModalSweet from "./ModalSweet";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { useSelector,useDispatch } from "react-redux";
-import { UpdateUserById } from "~/redux/actions";
+import { UpdateUserById, actFetchUserInfo } from "~/redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -67,18 +67,26 @@ const dataDefault = {
   sex: "",
 };
 
-const Modals = ({ isShowModal, title, handleShowModal, type }) => {
+const dataRegistesDefault = {
+  "place_start": "",
+  "place_end": "",
+  "phone_number": "",
+  "introduce": "",
+}
+
+const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket = ""}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [clickSaveLink, setClickSaveLink] = useState(false);
-  const [dataRegister, setDataRegister] = useState(dataDefault);
+  const [dataRegister, setDataRegister] = useState(dataRegistesDefault);
   const { userInfo, dataUser } = useSelector((state) => state.users);
+  const [dataUpdate, setDataUpdate] = useState(userInfo);
 
   //function render
   const renderShareLink = () => {
     return (
       <div className={classes.content}>
-        <p className={classes.link}>http://localhost:3000/</p>
+        <p className={classes.link}>http://localhost:3000/trips/id={data}</p>
         <Tooltip title="Lấy link" placement="top">
           <FileCopy
             onClick={() => handleClickCoppyLink()}
@@ -107,7 +115,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
             label="Họ và tên"
             defaultValue={userInfo.name}
             style={{ width: "100%" }}
-            onChange={(e) => handleChangeDataRegister("name", e.target.value)}
+            onChange={(e) => handleChangeDataUpdate("name", e.target.value)}
           />
         </Grid>
         <Grid item xs={6}>
@@ -118,7 +126,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
             label="Email"
             defaultValue={userInfo.email}
             style={{ width: "100%" }}
-            onChange={(e) => handleChangeDataRegister("email", e.target.value)}
+            onChange={(e) => handleChangeDataUpdate("email", e.target.value)}
           />
         </Grid>
         <Grid item xs={4}>
@@ -129,7 +137,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
               id="demo-simple-select"
               style={{ width: "100%" }}
               value={userInfo.sex}
-              onChange={(e) => handleChangeDataRegister("sex", e.target.value)}
+              onChange={(e) => handleChangeDataUpdate("sex", e.target.value)}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -148,7 +156,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
             label="Mật khẩu"
             defaultValue={userInfo.password}
             style={{ width: "100%" }}
-            onChange={(e) => handleChangeDataRegister("password", e.target.value)}
+            onChange={(e) => handleChangeDataUpdate("password", e.target.value)}
           />
         </Grid>
         <Grid item xs={4}>
@@ -159,7 +167,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
             label="Số điện thoại"
             defaultValue={userInfo.phone}
             style={{ width: "100%" }}
-            onChange={(e) => handleChangeDataRegister("place", e.target.value)}
+            onChange={(e) => handleChangeDataUpdate("phone", e.target.value)}
           />
         </Grid>
         <div className="btn-register-trip">
@@ -167,7 +175,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
             variant="contained"
             color="primary"
             href="#contained-buttons"
-            onClick={() => handleClickRegister()}
+            onClick={() => handleClickUpdateInfo()}
           >
             Lưu thông tin
           </Button>
@@ -186,7 +194,17 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
             variant="outlined"
             label="Điểm lên xe"
             style={{ width: "100%" }}
-            onChange={(e) => handleChangeDataRegister("place", e.target.value)}
+            onChange={(e) => handleChangeDataRegister("place_start", e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            required
+            id="outlined-basic"
+            variant="outlined"
+            label="Điểm xuống xe"
+            style={{ width: "100%" }}
+            onChange={(e) => handleChangeDataRegister("place_end", e.target.value)}
           />
         </Grid>
         <Grid item xs={6}>
@@ -231,44 +249,70 @@ const Modals = ({ isShowModal, title, handleShowModal, type }) => {
   //function click
   const handleClickCoppyLink = () => {
     setClickSaveLink(true);
-    navigator.clipboard.writeText(`http://localhost:3000/${test}`);
+    navigator.clipboard.writeText(`http://localhost:3000/trips/id=${data}`);
   };
 
-  const handleChangeDataRegister = (field, value) => {
-    const newData = { ...userInfo };
+  const handleChangeDataUpdate = (field, value) => {
+    const newData = { ...dataUpdate };
     newData[`${field}`] = value;
-    setDataRegister(newData);
+    setDataUpdate(newData);
   };
+
   const handleClickRegister = () => {
+    handleShowModal(false);
+    const checkField = checkFieldRequired();
+    if(checkField){
+      ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin");
+      return;
+    };
+
+    const dataInfo = {
+      userInfo: dataUser,
+      dataRegister, 
+      idTrip: data._id,
+      titleTrip: data.title
+    }
+    socket.emit("send_data_register", dataInfo)
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Đăng ký chuyến đi thành công. Vui lòng chờ phản hồi từ người tạo',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  };
+
+  const checkFieldRequired = () => {
+    let flag = false;
+    const listFiled = ["place_start", "place_end" , "phone_number", "introduce"];
+    listFiled.map((filed) => {
+      if(!dataRegister[filed]){
+        flag = true;
+      };
+    });
+    return flag;
+  }
+
+  const handleClickUpdateInfo = () => {
     const params = {
-      dataRegister,
+      dataRegister: dataUpdate
     }
     dispatch(UpdateUserById(params));
-    // if (resultCheck) {
-    //   ModalSweet("error", "Lỗi", "Yêu cầu bạn điền đầy đủ thông tin");
-    // } else {
-    //   Swal.fire({
-    //     position: "top-end",
-    //     icon: "success",
-    //     title: "Đăng ký thành công , vui lòng chờ phản hồi từ người tạo",
-    //     showConfirmButton: false,
-    //     timer: 2000,
-    //   });
-    // }
     handleShowModal(false);
-  };
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Cập nhập thông tin thành công',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  }
 
-  const checkFieldRequied = () => {
-    const filedRequire = ["place", "phone_number", "introduce"];
-    let checkField = false;
-    for (const [key, value] of Object.entries(filedRequire)) {
-      if (!dataRegister[value]) {
-        checkField = true;
-        break;
-      }
-    }
-    return checkField;
-  };
+  const handleChangeDataRegister = (field, value) => {
+    const newData = {...dataRegister};
+    newData[field] = value;
+    setDataRegister(newData);
+  }
 
   return (
     <div>

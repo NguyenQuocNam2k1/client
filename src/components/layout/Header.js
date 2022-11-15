@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   Grid,
   AppBar,
@@ -26,21 +26,15 @@ import {
 } from "@material-ui/icons/";
 import "~/assets/style/header.scss";
 import { useNavigate, Link } from "react-router-dom";
-import { getSearch } from "~/redux/actions";
-import Logo from "~/assets/image/avatar.webp";
-import { useSelector } from "react-redux";
+import { getSearch, getNotification, updateNotification, actFetchTotalNoti } from "~/redux/actions";
+import ImageAvatar from "~/assets/image/avatar.webp";
+import Logo from "~/assets/image/logo.webp";
+import { useSelector, useDispatch } from "react-redux";
 import { setCookie } from "-cc/cookie";
+import Loading from "~/components/layout/Loading";
 
-
-const listNoti = [
-  { name: "Hí hí", content: "Không có content" },
-  { name: "Hí hí", content: "Không có content" },
-  { name: "Hí hí", content: "Không có content" },
-  { name: "Hí hí", content: "Không có content" },
-  { name: "Hí hí", content: "Không có content" },
-];
-
-function Header() {
+function Header({socket}) {
+  const dispatch = useDispatch();
   const [isAuthenticate, setIsAuThenticate] = useState(true);
   const [showResultSearch, setShowResultSearch] = useState(false);
   const [valueSearch, setValueSearch] = useState("");
@@ -50,6 +44,8 @@ function Header() {
   const navigate = useNavigate();
   const timeRef = useRef(null);
   const { dataUser } = useSelector((state) => state.users);
+  const { listNotification, totalNotification } = useSelector((state) => state.pages);
+  console.log(listNotification, totalNotification);
 
   const listMenuAvatar = [
     {
@@ -82,17 +78,30 @@ function Header() {
   };
 
   const handleClickItem = (router, text) => {
-    if(text === "Đăng xuất"){
-      setCookie("CD_token", '');
+    if (text === "Đăng xuất") {
+      setCookie("CD_token", "");
     }
-    navigate(router);
+    if (text === "Xem thông tin"){
+      window.location.replace(router);
+    } else {
+      navigate(router);
+    }
   };
 
-  const handleClickIconNoti = () => {
+  const handleClickIconNoti = async () => {
     const listMenu = document.querySelector(".info-icon-item-list");
     listMenu.classList.remove("show-list-menu");
     setShowListNotification(!showListNotification);
-  }
+
+    let params = {
+      type: "statusSeen",
+      id_author: dataUser._id,
+    }
+    const result = await updateNotification(params, dispatch);
+    if(result.status === 200){
+      dispatch(actFetchTotalNoti(''));
+    }
+  };
 
   const renderMenuInfo = () => {
     return (
@@ -105,23 +114,29 @@ function Header() {
           ) : (
             <div className="info-icon-item">
               <Badge
-                badgeContent={1}
+                badgeContent={totalNotification}
                 max={999}
                 color="primary"
                 children={<Notifications />}
                 className="header_icon_noti"
-                onClick = {() => handleClickIconNoti()}
+                onClick={() => handleClickIconNoti()}
               />
               {showListNotification && renderListNotification()}
               {/* Avatar sẽ để theo tên mặc định của người dùng. Background sẽ random */}
-              <Avatar className="avatar" onClick={() => clickAvatar()}>
-                Nam
-              </Avatar>
+              <Avatar
+                className="avatar"
+                src={dataUser.avatar.urlImage}
+                onClick={() => clickAvatar()}
+              ></Avatar>
               <Paper className="info-icon-item-list">
                 <MenuList className="menu-list-header">
                   {listMenuAvatar.map((item, index) => {
                     return (
-                      <div onClick={() => handleClickItem(item.navigate, item.text)}>
+                      <div
+                        onClick={() =>
+                          handleClickItem(item.navigate, item.text)
+                        }
+                      >
                         <MenuItem key={index}>
                           <ListItemIcon>{item.icon}</ListItemIcon>
                           <ListItemText>{item.text}</ListItemText>
@@ -196,16 +211,16 @@ function Header() {
       <div className="list_noti">
         <p>Thông báo</p>
         <Divider />
-        {listNoti.length && (
+        {listNotification.length && (
           <Paper className="info-noti-list">
             <MenuList>
-              {listNoti.map((item, index) => {
+              {listNotification.map((item, index) => {
                 return (
                   <div>
                     <MenuItem key={index} className="notify-item">
                       <ListItemIcon>
                         <img
-                          src={Logo}
+                          src={ImageAvatar}
                           className="img-notification"
                           alt="anh-notification"
                         />
@@ -213,7 +228,7 @@ function Header() {
                       <ListItemText>
                         <div className="content-notification">
                           <p className="title-noti">
-                            Đã đăng ký chuyến đi <b>Hà Nội - Hà Nam</b> của bạn 
+                            Nguyễn Văn Minh đã đăng ký chuyến đi <b>Hà Nội - Hà Nam</b> của bạn
                           </p>
                           <div className="btn-noti">
                             <Button
@@ -236,7 +251,7 @@ function Header() {
                               className="btn-noti-item info"
                             >
                               Xem thông tin
-                            </Button>           
+                            </Button>
                           </div>
                         </div>
                       </ListItemText>
@@ -281,47 +296,72 @@ function Header() {
     }, 1000);
   };
 
+  const fetchNotification = () => {
+    const param = {
+      id_author: dataUser._id,
+    }
+    dispatch(getNotification(param));
+  }
+
+  useEffect(() => {
+    socket.on("receive_noti_register", (data) => {
+      if(dataUser){
+        fetchNotification();
+      }
+    });
+  },[socket, dataUser]);
+
+  useEffect(() => {
+    if(dataUser){
+      fetchNotification();
+    }
+  }, [dataUser]);
+
   return (
     <AppBar position="static" className="header">
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="space-between"
-        className="header-item"
-      >
-        <Grid item xs={3}>
-          <Link to="/">
-            <img
-              src="https://danangaz.com/wp-content/uploads/2018/01/Untitled-1-01-300x129.png"
-              className="logo"
-              alt="logo"
-            />
-          </Link>
+      {!dataUser ? (
+        <Loading />
+      ) : (
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          className="header-item"
+        >
+          <Grid item xs={3}>
+            <Link to="/">
+              <img
+                src={Logo}
+                className="logo"
+                alt="logo"
+              />
+            </Link>
+          </Grid>
+          <Grid item xs={5}>
+            <div className="header-search">
+              <TextField
+                id="filled-search"
+                label="Tìm kiếm chuyến đi của bạn"
+                type="search"
+                variant="filled"
+                value={valueSearch}
+                onChange={(e) => {
+                  handleSearch(e.target.value);
+                }}
+              ></TextField>
+              {isLoading ? (
+                <CircularProgress className="loading-search" />
+              ) : (
+                <SvgIcon component={Search} />
+              )}
+              {showResultSearch && renderResultSearch()}
+            </div>
+          </Grid>
+          <Grid item xs={4}>
+            <div className="header-info">{renderMenuInfo()}</div>
+          </Grid>
         </Grid>
-        <Grid item xs={5}>
-          <div className="header-search">
-            <TextField
-              id="filled-search"
-              label="Tìm kiếm chuyến đi của bạn"
-              type="search"
-              variant="filled"
-              value={valueSearch}
-              onChange={(e) => {
-                handleSearch(e.target.value);
-              }}
-            ></TextField>
-            {isLoading ? (
-              <CircularProgress className="loading-search" />
-            ) : (
-              <SvgIcon component={Search} />
-            )}
-            {showResultSearch && renderResultSearch()}
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div className="header-info">{renderMenuInfo()}</div>
-        </Grid>
-      </Grid>
+      )}
       {/* </Toolbar> */}
     </AppBar>
   );

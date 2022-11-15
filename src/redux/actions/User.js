@@ -68,8 +68,7 @@ export const getUserById = (params) =>{
 
 export const UpdateUserById = (params) => {
     return async (dispatch) => {
-        const response = await api.get("/api/user/UpdateUserById",{params});
-        console.log(response);
+        const response = await api.get("/api/user/updateUserById",{params});
         if(Number(response.data.status) === 200){
             dispatch({type: UserType.GET_USER_BY_ID, payload: response.data})
             return true;

@@ -2,6 +2,30 @@
     &-item{
         margin-bottom:20px;
         margin-top: 15px;
+        .title-card{
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            svg {
+              fill: black;
+              margin-top: -2px;
+              margin-right: 4px;
+            }
+        }
+        .trip-info{
+            display: flex;
+            justify-content: space-between;
+        }
+        .trip-info-header{
+            display: flex;
+            .MuiTypography-root{
+                margin-right: 16px;
+            }
+        }
+        .MuiTypography-colorTextSecondary{
+            margin-top: 8px !important;
+        }
     }
     .MuiPaper-root{
         max-width: 100% !important;

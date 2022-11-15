@@ -25,6 +25,10 @@
       height: 80px;
     }
   }
+  .card-item-history{
+      height: 480px;
+      overflow: scroll;
+    }
   .card-item {
     margin: 0 20px;
     padding: 10px;
@@ -64,6 +68,7 @@
     .list-trip-history {
       position: relative;
       padding: 0px 20px;
+
       .icon-list-trip {
         width: 30px;
         height: 30px;

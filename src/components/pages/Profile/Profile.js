@@ -16,7 +16,8 @@ import Modal from "~/components/layout/Modal";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import Loading from "~/components/layout/Loading";
-import { getUserById,getTripHistory } from "~/redux/actions";
+import { getUserById, getTripHistory, getTripCreated } from "~/redux/actions";
+import NotData from "~/components/layout/NotData";
 
 function Profile(props) {
   const [isShowModal, setIsShowModal] = useState(false);
@@ -24,8 +25,8 @@ function Profile(props) {
   const dispatch = useDispatch();
   const idUser = slug.slice(3);
   const [sex, setSex] = useState("");
-  const {listTripHistory} = useSelector((state) => state.pages);
-  const { userInfo, dataUser } = useSelector((state) => state.users);
+  const { listTripHistory } = useSelector((state) => state.pages);
+  const { userInfo, dataUser, listTripCreated } = useSelector((state) => state.users);
 
   useEffect(() => {
     switch (userInfo.sex) {
@@ -46,10 +47,11 @@ function Profile(props) {
       _id: idUser,
     };
     dispatch(getUserById(params));
+    dispatch(getTripCreated(params));
   }, []);
 
   useEffect(() => {
-    if(userInfo){
+    if (userInfo) {
       const params = {
         name_user: userInfo.name,
         email: userInfo.email,
@@ -57,6 +59,7 @@ function Profile(props) {
       dispatch(getTripHistory(params));
     }
   }, [dispatch, userInfo, slug]);
+
   return (
     <>
       {!userInfo || !listTripHistory ? (
@@ -64,9 +67,9 @@ function Profile(props) {
       ) : (
         <div className="profile">
           <Grid className="profile-layout" spacing={3}>
-            <Grid xs={3} style={{maxWidth: "30%"}}>
+            <Grid xs={3} style={{ maxWidth: "30%" }}>
               <Card className="profile_title">
-                <Avatar alt="Remy Sharp" src={userInfo.avatar} />
+                <Avatar alt="Remy Sharp" src={userInfo.avatar.urlImage} />
                 <p className="name-profile">{userInfo.name}</p>
               </Card>
             </Grid>
@@ -95,59 +98,91 @@ function Profile(props) {
                     className="rate"
                   />
                 </Card>
-                {dataUser._id === userInfo._id && 
-                <Card className="card-item">
-                  <div className="card-my-info">
-                    <p className="title">Thông tin cá nhân</p>
-                    <Edit
-                      className="icon-edit"
-                      fontSize="large"
-                      onClick={() => setIsShowModal(true)}
-                    />
-                  </div>
-                  <div className="card-item-content">
-                    <Email /> Email : <b>{userInfo.email}</b>
-                  </div>
-                  <div className="card-item-content">
-                    <ContactPhone /> Số điện thoại : <b>{userInfo.phone}</b>
-                  </div>
-                  <div className="card-item-content">
-                    <Accessibility /> Giới tính : <b>{sex}</b>
-                  </div>
-                </Card>
+                {dataUser._id === userInfo._id ?  
+                  <Card className="card-item">
+                    <div className="card-my-info">
+                      <p className="title">Thông tin cá nhân</p>
+                      <Edit
+                        className="icon-edit"
+                        fontSize="large"
+                        onClick={() => setIsShowModal(true)}
+                      />
+                    </div>
+                    <div className="card-item-content">
+                      <Email /> Email : <b>{userInfo.email}</b>
+                    </div>
+                    <div className="card-item-content">
+                      <ContactPhone /> Số điện thoại : <b>{userInfo.phone}</b>
+                    </div>
+                    <div className="card-item-content">
+                      <Accessibility /> Giới tính : <b>{sex}</b>
+                    </div>
+                  </Card> : 
+                  <Card className="card-item">
+                    <div className="card-my-info">
+                      <p className="title">Chuyến đi đã tạo</p>
+                    </div>
+                    <div className="card-item-content">
+                      <Email /> Email : <b>{userInfo.email}</b>
+                    </div>
+                    <div className="card-item-content">
+                      <ContactPhone /> Số điện thoại : <b>{userInfo.phone}</b>
+                    </div>
+                    <div className="card-item-content">
+                      <Accessibility /> Giới tính : <b>{sex}</b>
+                    </div>
+                  </Card>
                 }
               </Grid>
 
               <Grid item xs={8}>
-                <Card className="card-item">
+                <Card className="card-item card-item-history">
                   <p className="title title-list-trip">
                     Những chuyến đi gần đây
                   </p>
-                  {listTripHistory.map((trip, index) => {
-                    const author = JSON.parse(trip.author_info);
-                    const image = JSON.parse(trip.url_image).urlImage;
-                    return (
-                    <div className="list-trip-history" key={index}>
-                      <FiberManualRecord
-                        color="primary"
-                        className="icon-list-trip"
-                      />
-                      <div className="trip-item">
-                        <div className="trip-item-image">
-                          <img src={`${image}`} alt="anh-chuyen-di"/>
-                        </div>
-                        <div className="trip-item-content">
-                          <h4 className="trip-item-title">{trip.title}</h4>
-                          <p>Người tạo: {author.name}</p>
-                          <p>Ngày đi: {trip.start_at}</p>
-                          <p>Điểm đi: 27/07/2022</p>
-                          <p>Điểm đến: 27/07/2022</p>
-                          <p>Thành viên: 27/07/2022</p>
-                        </div>
-                      </div>
-                    </div>
-                    )
-                  })}
+                  {listTripHistory.length === 0 ? (
+                    <NotData
+                      content={`${
+                        dataUser._id === userInfo._id ? "Bạn" : userInfo.name
+                      } chưa tham gia chuyến đi nào`}
+                    />
+                  ) : (
+                    <>
+                      {listTripHistory.map((trip, index) => {
+                        const author = JSON.parse(trip.author_info);
+                        const image = JSON.parse(trip.url_image).urlImage;
+                        return (
+                          <div className="list-trip-history" key={index}>
+                            <FiberManualRecord
+                              color="primary"
+                              className="icon-list-trip"
+                            />
+                            <div className="trip-item">
+                              <div className="trip-item-image">
+                                <img src={`${image}`} alt="anh-chuyen-di" />
+                              </div>
+                              <div className="trip-item-content">
+                                <h4 className="trip-item-title">
+                                  {trip.title}
+                                </h4>
+                                <p>Người tạo: {author.name}</p>
+                                <p>
+                                  Ngày đi: {console.log(trip.start_at)}
+                                  {moment(
+                                    trip.start_at,
+                                    "YYYY-MM-DDTHH:mm:ss.SSS+00"
+                                  ).format("DD-MM-YYYY HH:mm:ss")}
+                                </p>
+                                <p>Điểm đi: {trip.start_place}</p>
+                                <p>Điểm đến: {trip.end_place}</p>
+                                {/* <p>Thành viên: 27/07/2022</p> */}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
                 </Card>
               </Grid>
             </Grid>

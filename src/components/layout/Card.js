@@ -7,7 +7,6 @@ import Loading from "./Loading";
 const Card = ({ listData }) => {
 
   const formatStartAt = (startAt) => {
-    console.log(startAt);
     const year = startAt.slice(0,4);
     const month = startAt.slice(5,7);
     const day = startAt.slice(8,10);

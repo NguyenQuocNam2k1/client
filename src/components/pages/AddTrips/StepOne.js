@@ -165,6 +165,7 @@ const StepOne = ({dataTrip, handleEnterData}) => {
               InputLabelProps={{
                 shrink: true,
               }}
+              onChange = {(e) => handleEnterData("start_at",e.target.value)}
             />
           </form>
         </Grid>

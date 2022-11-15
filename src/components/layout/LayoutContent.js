@@ -4,10 +4,10 @@ import { Grid } from "@material-ui/core";
 import SideBar from './SideBar';
 import Header from "./Header";
 
-function LayoutContent({ children }) {
+function LayoutContent({ children, socket }) {
   return (
     <>
-      <Header />
+      <Header socket={socket}/>
       <Grid container spacing={3} className="container-format" style={{marginTop:"30px"}}>
           <Grid item xs={3}>
               <SideBar />

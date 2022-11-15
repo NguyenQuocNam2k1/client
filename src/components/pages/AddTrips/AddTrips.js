@@ -31,17 +31,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const dataDefault =  {
+  author_info: "",
+  title: "",
+  hashtags: "",
+  xe_di: "o_to_6",
+  loai_xe: "",
+  number_member: "",
+  phone_number: "",
+  cost: 0,
+  start_place: "",
+  end_place: "",
+  rules: "",
+  start_at: "",
+  url_image: "",
+  count_like: 0,
+  trip_info: ""
+};
+
 function getSteps() {
   return ["Điền thông tin", "Chọn địa điểm", "Xác nhận thông tin "];
 }
 
 function AddTrips() {
   const classes = useStyles();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [activeStep, setActiveStep] = useState();
+  const [activeStep, setActiveStep] = useState(0);
   const dataTrip = useSelector((state) => state.pages.newTrip);
   const { dataUser } = useSelector((state) => state.users);
+  const navigate = useNavigate();
   const steps = getSteps();
 
   //function logic
@@ -67,9 +85,11 @@ function AddTrips() {
           timer: 1500
         });
         // eslint-disable-next-line no-undef
-        setTimeOut(() => {
-          window.location.replace("http://localhost:3000/");
-        }, 1500)
+        const params = {
+          data: dataDefault,
+        }
+        dispatch(actFetchNewTrip(params));
+        navigate("/");
       } else {
         ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin");
       }

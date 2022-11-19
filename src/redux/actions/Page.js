@@ -8,8 +8,15 @@ export const actFetchNewTrip = (data) => {
     }
 }
 export const actFetchTotalNoti = (data) => {
+    console.log(11);
     return async (dispatch) => {
         dispatch({type: pageType.FETCH_TOTAL_NOTIFICATION, payload: data});
+    }
+}
+
+export const actFetchListNoti = (data) => {
+    return async (dispatch) => {
+        dispatch({type: pageType.FETCH_LIST_NOTI, payload: data});
     }
 }
 
@@ -99,6 +106,7 @@ export const getNotification = (params) => {
 export const updateNotification = async (params) => { 
     const response = await api.post("/api/page/updateNotification", params);
     if(response.data.status === 200){
+        console.log(response);
         return response.data;
     }
     return false;

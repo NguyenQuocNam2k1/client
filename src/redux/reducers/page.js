@@ -56,8 +56,8 @@ export default function pageReducer(state = initialState, { type, payload }) {
     case pageType.FETCH_TOTAL_NOTIFICATION:
         newState.totalNotification = 0;
         return newState;   
-    case pageType.FETCH_TOTAL_LIST_NOTI:
-        newState.listNotification = payload.data;
+    case pageType.FETCH_LIST_NOTI:
+        newState.listNotification = payload;
         return newState;         
     default:
       return newState;

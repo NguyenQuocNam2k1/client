@@ -57,17 +57,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   iconSave: {},
+  modal_info_register: {
+    width: "700px",
+  },
 }));
 
-const dataDefault = {
-  name: "",
-  phone: "",
-  email: "",
-  password: "",
-  sex: "",
-};
-
-const dataRegistesDefault = {
+const dataRegisterDefault = {
   "place_start": "",
   "place_end": "",
   "phone_number": "",
@@ -78,9 +73,11 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
   const classes = useStyles();
   const dispatch = useDispatch();
   const [clickSaveLink, setClickSaveLink] = useState(false);
-  const [dataRegister, setDataRegister] = useState(dataRegistesDefault);
+  const [dataRegister, setDataRegister] = useState(dataRegisterDefault);
   const { userInfo, dataUser } = useSelector((state) => state.users);
   const [dataUpdate, setDataUpdate] = useState(userInfo);
+
+  // console.log(type, data);
 
   //function render
   const renderShareLink = () => {
@@ -246,6 +243,73 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
     );
   };
 
+  const renderModalInfoRegister = () => {
+    const info = data.introduce;
+    let sex = data.info_user.sex;
+    if(sex === "male") sex = "Nam";
+    if(sex === "female") sex = "Nữ";
+    if(sex === "other") sex = "Không xác định";
+    return(
+    <Grid container spacing={3} style={{ marginTop: "8px" }}>
+        <Grid item xs={6}>
+          <TextField
+            required
+            id="outlined-helperText"
+            variant="outlined"
+            label="Điểm lên xe"
+            style={{ width: "100%" }}
+            defaultValue={info.place_start}
+            disabled
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            required
+            id="outlined-helperText"
+            variant="outlined"
+            label="Điểm xuống xe"
+            style={{ width: "100%" }}
+            defaultValue={info.place_end}
+            disabled
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            required
+            id="outlined-helperText"
+            variant="outlined"
+            label="Số điện thoại liên hệ"
+            style={{ width: "100%" }}
+            defaultValue={info.phone_number}
+            disabled
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            required
+            id="outlined-helperText"
+            variant="outlined"
+            label="Số điện thoại liên hệ"
+            style={{ width: "100%" }}
+            defaultValue={data.info_user.sex}
+            disabled
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextareaAutosize
+            minRows={11}
+            maxRows={11}
+            className="introduction require_create"
+            aria-label="maximum height"
+            placeholder="Giới thiệu bản thân"
+            defaultValue={info.introduce}
+            disabled
+          />
+        </Grid>
+    </Grid>
+    )
+  }
+
   //function click
   const handleClickCoppyLink = () => {
     setClickSaveLink(true);
@@ -260,17 +324,22 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
 
   const handleClickRegister = () => {
     handleShowModal(false);
+    const image = JSON.parse(data.url_image).urlImage;
     const checkField = checkFieldRequired();
     if(checkField){
       ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin");
       return;
     };
-
     const dataInfo = {
       userInfo: dataUser,
       dataRegister, 
       idTrip: data._id,
-      titleTrip: data.title
+      info_trip: {
+        imageTrip:image, 
+        nameTrip:data.title, 
+        member_number: data.number_member, 
+      },
+      status: 0,
     }
     socket.emit("send_data_register", dataInfo)
     Swal.fire({
@@ -329,13 +398,14 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
         }}
       >
         <Fade in={isShowModal}>
-          <div className={classes.paper}>
+          <div className={`${classes.paper} ${type === "infoRegister" ? classes.modal_info_register: ""}`}>
             <h2 id="transition-modal-title" className={classes.title}>
               {title}
             </h2>
             {type === "get_link" && renderShareLink()}
             {type === "register_trip" && renderRegister()}
             {type === "profile" && renderUpdateInfo()}
+            {type === "infoRegister" && renderModalInfoRegister()}
           </div>
         </Fade>
       </Modal>

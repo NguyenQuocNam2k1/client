@@ -26,12 +26,13 @@ import {
 } from "@material-ui/icons/";
 import "~/assets/style/header.scss";
 import { useNavigate, Link } from "react-router-dom";
-import { getSearch, getNotification, updateNotification, actFetchTotalNoti } from "~/redux/actions";
-import ImageAvatar from "~/assets/image/avatar.webp";
+import { getSearch, getNotification, updateNotification, actFetchTotalNoti, actFetchListNoti } from "~/redux/actions";
 import Logo from "~/assets/image/logo.webp";
 import { useSelector, useDispatch } from "react-redux";
 import { setCookie } from "-cc/cookie";
 import Loading from "~/components/layout/Loading";
+import NoData from "~/assets/image/nodata.webp";
+import Modal from "./Modal";
 
 function Header({socket}) {
   const dispatch = useDispatch();
@@ -41,11 +42,12 @@ function Header({socket}) {
   const [isLoading, setIsLoading] = useState(false);
   const [resultSearch, setResultSearch] = useState("");
   const [showListNotification, setShowListNotification] = useState(false);
+  const [showModalRegister, setShowModalRegister] = useState(false);
+  const [indexNotiSelect, setIndexNotiSelect] = useState("");
   const navigate = useNavigate();
   const timeRef = useRef(null);
   const { dataUser } = useSelector((state) => state.users);
   const { listNotification, totalNotification } = useSelector((state) => state.pages);
-  console.log(listNotification, totalNotification);
 
   const listMenuAvatar = [
     {
@@ -88,7 +90,7 @@ function Header({socket}) {
     }
   };
 
-  const handleClickIconNoti = async () => {
+  const handleClickIconNoti = () => {
     const listMenu = document.querySelector(".info-icon-item-list");
     listMenu.classList.remove("show-list-menu");
     setShowListNotification(!showListNotification);
@@ -97,8 +99,8 @@ function Header({socket}) {
       type: "statusSeen",
       id_author: dataUser._id,
     }
-    const result = await updateNotification(params, dispatch);
-    if(result.status === 200){
+    const resultUpdate = handleUpdateNotification(params);
+    if(Number(resultUpdate.status) === 200){
       dispatch(actFetchTotalNoti(''));
     }
   };
@@ -206,35 +208,80 @@ function Header({socket}) {
     );
   };
 
+  const handleClickItemNoti = (idNoti, indexNoti, button, infoTrip, idTrip, infoUser) => {
+    const newList = [...listNotification];
+    newList[indexNoti]['is_read'] = 1;
+
+    let params = {
+      type: "statusRead",
+      id_notification: idNoti,
+    }
+    const response = handleUpdateNotification(params);
+
+    if(Number(response.status) === 200){
+      let status = 0;
+      let newTripInfo = {...infoTrip};
+      newTripInfo['member_number'] = Number(newTripInfo['member_number']) - 1;
+      dispatch(actFetchListNoti(newList));
+      if(button === "info"){
+        setIndexNotiSelect(indexNoti);
+        setShowModalRegister(!showModalRegister);
+      }
+      if(button === "access") status = 2;
+      if(button === "cancel") status = 1;
+      const dataUpdate = {
+        idNoti: idNoti,
+        status: status,
+        newTripInfo,
+        idTrip,
+        infoUser
+      }
+      socket.emit("update_notification", dataUpdate)
+    }
+  }
+
+  const handleUpdateNotification = async (params) => {
+    const result = await updateNotification(params, dispatch);
+    return result;
+  }
+
   const renderListNotification = () => {
     return (
       <div className="list_noti">
         <p>Thông báo</p>
         <Divider />
-        {listNotification.length && (
+        {listNotification.length ? (
           <Paper className="info-noti-list">
             <MenuList>
               {listNotification.map((item, index) => {
+                let status = '';
+                if(Number(item.status) === 1) status = 'thất bại';
+                if(Number(item.status) === 2) status = 'thành công';
+                console.log(dataUser);
                 return (
-                  <div>
-                    <MenuItem key={index} className="notify-item">
+                  <div key={index}>
+                  {
+                    dataUser._id !== item.id_author ? 
+                    <MenuItem className={`notify-item ${!item.is_read ? 'notify-item-active': ''}`}
+                    >
                       <ListItemIcon>
                         <img
-                          src={ImageAvatar}
+                          src={item.info_trip.imageTrip}
                           className="img-notification"
                           alt="anh-notification"
                         />
                       </ListItemIcon>
                       <ListItemText>
                         <div className="content-notification">
-                          <p className="title-noti">
-                            Nguyễn Văn Minh đã đăng ký chuyến đi <b>Hà Nội - Hà Nam</b> của bạn
-                          </p>
+                          <div className="title-noti">
+                            {item.info_user.name} đã đăng ký chuyến đi <br/> <b>{item.info_trip.nameTrip}</b> của bạn
+                          </div>
                           <div className="btn-noti">
                             <Button
                               variant="contained"
                               color="primary"
                               className="btn-noti-item agree"
+                              onClick = {() => handleClickItemNoti(item._id, index, "access", item.info_trip, item.id_trip, item.info_user)}
                             >
                               Chấp nhận
                             </Button>
@@ -242,26 +289,61 @@ function Header({socket}) {
                               variant="contained"
                               color="primary"
                               className="btn-noti-item cancel"
+                              onClick = {() => handleClickItemNoti(item._id, index, "cancel", item.info_trip, item.id_trip, item.info_user)}
                             >
                               Từ chối
                             </Button>
                             <Button
                               variant="contained"
                               color="primary"
-                              className="btn-noti-item info"
+                              className="btn-noti-item"
+                              onClick = {() => handleClickItemNoti(item._id, index, "info", item.info_trip, item.id_trip, item.info_user)}
                             >
                               Xem thông tin
                             </Button>
+                          </div> 
+                        </div>
+                      </ListItemText>
+
+                      {/* Modal info register */}
+                      <Modal
+                        isShowModal={showModalRegister && indexNotiSelect === index}
+                        handleShowModal={setShowModalRegister}
+                        data={item}
+                        title={`Thông tin của ${item.info_user.name}`}
+                        type="infoRegister"
+                      />
+                    </MenuItem> 
+                    : 
+                    Number(item.status) !== 0 ?
+                    <MenuItem  className={`notify-item ${!item.is_read ? 'notify-item-active': ''}`}
+                    >
+                      <ListItemIcon>
+                        <img
+                          src={item.info_trip.imageTrip}
+                          className="img-notification"
+                          alt="anh-notification"
+                        />
+                        <ListItemText>
+                        <div className="content-notification">
+                          <div className="title-noti">
+                            Chuyến đi <b>{item.info_trip.nameTrip}</b> bạn đăng ký đã <b>{status}</b>
                           </div>
                         </div>
                       </ListItemText>
-                    </MenuItem>
+                      </ListItemIcon>
+                    </MenuItem> : ""
+                  }
                   </div>
                 );
               })}
             </MenuList>
           </Paper>
-        )}
+        ) : <div className="page-no-data-noti">
+          <img src={NoData} alt="anh-no-data" />
+          <p>Bạn chưa có thông báo nào mới</p>
+        </div>
+        }
       </div>
     );
   };
@@ -305,6 +387,11 @@ function Header({socket}) {
 
   useEffect(() => {
     socket.on("receive_noti_register", (data) => {
+      if(dataUser){
+        fetchNotification();
+      }
+    });
+    socket.on("receive_noti_update", (data) => {
       if(dataUser){
         fetchNotification();
       }

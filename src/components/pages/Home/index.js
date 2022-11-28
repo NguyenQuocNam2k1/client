@@ -110,7 +110,6 @@ const Home = ({ socket }) => {
     setIsShowModal(!isShowModal);
   };
 
-
   useEffect(() => {
     dispatch(getTrips());
   }, []);

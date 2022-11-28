@@ -44,7 +44,7 @@ export default function pageReducer(state = initialState, { type, payload }) {
         newState.listTripHistory = payload.data;
         return newState; 
     case pageType.GET_TRIP_SEARCH:
-        newState.resultTripSearch = payload.data;
+        newState.resultTripSearch = [payload.data];
         return newState;
     case pageType.GET_TRIP_CREATED:
         newState.listTripCreated = payload.data;

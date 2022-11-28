@@ -3,15 +3,14 @@ import "~/assets/style/history.scss";
 import NotData from "~/components/layout/NotData";
 import { Divider } from "@material-ui/core";
 import Card from "-cl/Card";
-import { getTrips, getTripHistory, getUser } from "~/redux/actions";
+import { getTripHistory, getUser } from "~/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { getCookie } from "~/components/core/cookie";
 
 function History() {
-  const { listTrip } = useSelector((state) => state.pages);
   const dispatch = useDispatch();
   const { listTripHistory } = useSelector((state) => state.pages);
-  const { userInfo, dataUser } = useSelector((state) => state.users);
+  const { dataUser } = useSelector((state) => state.users);
 
   useEffect(() => {
     const email = getCookie("CD_email");
@@ -33,7 +32,7 @@ function History() {
           <h3>Những chuyến đi bạn đã tham gia</h3>
           <Divider />
         </div>
-        {!listTrip || listTrip.length === 0 ? (
+        {!listTripHistory || listTripHistory.length === 0 ? (
           <NotData content="Bạn chưa tham gia chuyến đi nào" />
         ) : (
           <Card listData={listTripHistory} />

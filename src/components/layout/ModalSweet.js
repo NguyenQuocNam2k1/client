@@ -1,4 +1,5 @@
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import React from "react";
 import "sweetalert2/src/sweetalert2.scss";
 
 const ModalSweet = (

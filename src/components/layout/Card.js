@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { Grid, Divider } from "@material-ui/core";
 import "~/assets/style/card.scss";
-import test from "~/assets/image/home_page/homePage2.jpg";
-import Loading from "./Loading";
 
 const Card = ({ listData }) => {
 
@@ -17,29 +15,27 @@ const Card = ({ listData }) => {
       </p>
     );
   };
-
   return (
     <React.Fragment>
-      {!listData.length ? (
-        <Loading />
-      ) : (
-        listData.map((data, index) => {
+      {listData.map((data, index) => {
+        const imageTrip = JSON.parse(data.url_image).urlImage;
+        const nameAuthor = JSON.parse(data.author_info).name;
           return (
             <div className="card" key={index}>
               <Grid container className="card_item">
                 <Grid item xs={3}>
-                  <img src={test} alt="anh_card" className="img_card_item" />
+                  <img src={imageTrip} alt="anh_card" className="img_card_item" />
                 </Grid>
                 <Grid item xs={9} className="card_item_content">
                   <div>
                     <h4 className="card_item_content_header">
-                      Nguyễn Quốc Nam
+                      {data.title}
                     </h4>
                     <p className="three_dot card_item_content_des">
-                      {data.title}
+                      Người tạo: <b>{nameAuthor}</b>
                     </p>
                     <p className="three_dot card_item_content_des">
-                      {data.rule}
+                      {data.rules}
                     </p>
                   </div>
                   <div className="card_item_content_action">
@@ -52,9 +48,9 @@ const Card = ({ listData }) => {
               </Grid>
               <Divider />
             </div>
-          );
-        })
-      )}
+          )
+      })
+    }
     </React.Fragment>
   );
 };

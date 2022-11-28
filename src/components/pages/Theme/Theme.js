@@ -10,8 +10,7 @@ import { getUser, actGetTheme, saveTheme } from "~/redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from "-cl/Loading";
 
-
-function Theme() {
+function Theme() {;
   const navigate = useNavigate();  
   const dispatch = useDispatch();
   const {dataUser} = useSelector((state) => state.users);

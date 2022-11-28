@@ -77,8 +77,6 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
   const { userInfo, dataUser } = useSelector((state) => state.users);
   const [dataUpdate, setDataUpdate] = useState(userInfo);
 
-  // console.log(type, data);
-
   //function render
   const renderShareLink = () => {
     return (
@@ -330,8 +328,10 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
       ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin");
       return;
     };
+    // console.log(data);
+    // return;
     const dataInfo = {
-      userInfo: dataUser,
+      userInfo: JSON.parse(data.author_info),
       dataRegister, 
       idTrip: data._id,
       info_trip: {

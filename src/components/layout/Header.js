@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import {
   Grid,
   AppBar,
@@ -257,7 +257,6 @@ function Header({socket}) {
                 let status = '';
                 if(Number(item.status) === 1) status = 'thất bại';
                 if(Number(item.status) === 2) status = 'thành công';
-                console.log(dataUser);
                 return (
                   <div key={index}>
                   {
@@ -378,12 +377,14 @@ function Header({socket}) {
     }, 1000);
   };
 
-  const fetchNotification = () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchNotification = useCallback(() => {
+    console.log(dataUser._id);
     const param = {
       id_author: dataUser._id,
     }
     dispatch(getNotification(param));
-  }
+  })
 
   useEffect(() => {
     socket.on("receive_noti_register", (data) => {
@@ -396,7 +397,7 @@ function Header({socket}) {
         fetchNotification();
       }
     });
-  },[socket, dataUser]);
+  },[socket, dataUser, fetchNotification]);
 
   useEffect(() => {
     if(dataUser){

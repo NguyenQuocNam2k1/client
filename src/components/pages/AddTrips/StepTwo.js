@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actFetchNewTrip } from "~/redux/actions";
 
 //config
-mapboxgl.accessToken = process.env.REACT_APP_MAP_TOKEN;
+mapboxgl.accessToken = "pk.eyJ1IjoibmFtbmV1IiwiYSI6ImNsOWNwcWdpODEyeWozbnBpYTI4eGNsbXoifQ.cvN5uKeXtGlhQBwxX6O5Xg";
 
 function StepTwo({ handleEnterData }) {
   const mapContainer = useRef(null);
@@ -18,7 +18,6 @@ function StepTwo({ handleEnterData }) {
   const [lng, setLng] = useState(105.845);
   const [lat, setLat] = useState(20.9997);
   const [zoom, setZoom] = useState(16);
-  const checkRender = useRef(false);
   const { newTrip } = useSelector((state) => state.pages);
 
   useEffect(() => {

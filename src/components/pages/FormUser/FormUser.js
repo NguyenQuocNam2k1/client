@@ -83,7 +83,7 @@ const FormUser = () => {
         checkField = true;
         break;
       } 
-      if(!dataRegister[value] && type === "register"){
+      if(!dataRegister[value] && type === "register" && !dataRegister["avatar"]){
         checkField = true;
         break;
       }
@@ -116,7 +116,6 @@ const FormUser = () => {
       }
       setIsLoading(true);
       const result = dispatch(logIn(dataLogin));
-      console.log(result);
     }
     setTimeout(() => {
       setIsLoading(false);
@@ -288,7 +287,7 @@ const FormUser = () => {
           </Button> :
           <div className="avatar-upload">
             <Clear className="avatar-upload-icon" onClick={() => handleDeleteAvatar()}/>
-            <img src="http://localhost/chuyen-de/backend/upload/robot.png-1667315235214.png" alt="avatar"/>
+            <img src={dataRegister.avatar.urlImage} alt="avatar"/>
           </div>
         }
       </Grid>

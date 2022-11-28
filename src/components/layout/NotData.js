@@ -1,6 +1,6 @@
 import React from 'react';
 import "~/assets/style/global.scss";
-import imageNoData from "~/assets/image/robot.png";
+import imageNoData from "~/assets/image/image-not-found.webp";
 
 const NotData = ({content}) => {
   return (

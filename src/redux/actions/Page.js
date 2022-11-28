@@ -43,9 +43,9 @@ export const getTrips = (params) =>{
     }
 }
 
-export const getTripsById = () =>{
+export const getTripsById = (params) =>{
     return async (dispatch) => {
-        const response = await api.get("/api/page/getTripsById");
+        const response = await api.get("/api/page/getTripsById", {params});
         if(Number(response.data.status) === 200){
             dispatch({type: pageType.GET_TRIP_SEARCH, payload: response.data})
             return true;
@@ -106,7 +106,6 @@ export const getNotification = (params) => {
 export const updateNotification = async (params) => { 
     const response = await api.post("/api/page/updateNotification", params);
     if(response.data.status === 200){
-        console.log(response);
         return response.data;
     }
     return false;

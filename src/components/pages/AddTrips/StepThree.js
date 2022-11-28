@@ -3,8 +3,6 @@ import { Grid, TextareaAutosize } from "@material-ui/core";
 import { useSelector,useDispatch } from "react-redux";
 import { actFetchNewTrip } from "~/redux/actions";
 
-
-
 function StepThree() {
   const dispatch = useDispatch();
   const { newTrip } = useSelector((state) => state.pages);
@@ -12,6 +10,7 @@ function StepThree() {
   const handleEnterData = (value) => {
     const dataTrip = {...newTrip};
     dataTrip['rules'] = value;
+    console.log(dataTrip);
     let params = {
       data: dataTrip,
     }
@@ -86,7 +85,7 @@ function StepThree() {
             aria-label="maximum height"
             placeholder="Nhập nội quy chuyến đi của bạn"
             defaultValue=""
-            onChange={e => handleEnterData("rules", e.target.value)}
+            onChange={e => handleEnterData(e.target.value)}
           />
         </Grid>
       </Grid>

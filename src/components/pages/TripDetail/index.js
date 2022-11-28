@@ -11,7 +11,7 @@ import {
   Typography,
   Tooltip,
 } from "@material-ui/core";
-import { MoreVert, ThumbUp, AddCircle, Share } from "@material-ui/icons";
+import { MoreVert, ThumbUp, AddCircle, Share , Subtitles} from "@material-ui/icons";
 import "~/assets/style/homePage.scss";
 import { getTripsById, actFetchUserInfo, updateUserInfo } from "~/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,16 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+const Index = ({ socket }) => {
   const { slug } = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
   const idTrip = slug.slice(3);
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalRegister, setIsShowModalRegister] = useState(false);
+  const [tripLink, setTripLink] = useState("");
   const [tripInfo, setTripInfo] = useState();
-  const { resultTripSeach } = useSelector((state) => state.pages);
-  const { dataUser } = useSelector((state) => state.users);
+  const  {dataUser}  = useSelector((state) => state.users);
+  const { resultTripSearch } = useSelector((state) => state.pages);
 
   const handleClickLike = async (postId) => {
     const newUser = dataUser;
@@ -56,8 +57,6 @@ const Home = () => {
     if (listPostNew.includes(postId)) {
       newUser["list_post_trip_like"] = listPostNew.filter(function (
         value,
-        index,
-        arr
       ) {
         return value !== postId;
       });
@@ -82,23 +81,29 @@ const Home = () => {
     setIsShowModalRegister(true);
     setTripInfo(data);
   };
+  const handleClickShareLink = (idTrip) => {
+    setTripLink(idTrip);
+    setIsShowModal(!isShowModal);
+  };
+
   useEffect(() => {
     if(idTrip){
       const params = {
         "_id": idTrip,
-      }
+      };
       dispatch(getTripsById(params));
     }
   }, [dispatch, idTrip]);
 
   return (
     <>
-      {!resultTripSeach || !dataUser ? (
+      {!resultTripSearch || !dataUser ? (
         <Loading />
       ) : (
         <div className="home-page">
-          {resultTripSeach.map((trip, key) => {
+          {resultTripSearch.map((trip, key) => {
             const authorInfo = JSON.parse(`${trip.author_info}`);
+            const urlImage = JSON.parse(trip.url_image).urlImage;
             const listPostLike = dataUser.list_post_trip_like;
             return (
               <div key={key}>
@@ -109,7 +114,7 @@ const Home = () => {
                       avatar={
                         <Avatar
                           aria-label="recipe"
-                          src={authorInfo.avatar}
+                          src={authorInfo.avatar.urlImage}
                           alt={key}
                         />
                       }
@@ -122,148 +127,109 @@ const Home = () => {
                       subheader={moment(
                         trip.update_at,
                         "YYYY-MM-DDTHH:mm:ss.SSS"
-                      ).format("DD-MM-YYYY")}
+                      ).format("DD-MM-YYYY HH:mm:ss")}
                     />
-                    <Grid item xs={10}>
-                      <div className="content-card-trip">
-                        <Typography
-                          variant="body2"
-                          className="description-card filed-card three_dot"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          Tiêu đề:
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          className="description-card three_dot"
-                          style={{ marginLeft: "4px !important" }}
-                          color="textSecondary"
-                          component="p"
-                        >
-                          {trip.title}
-                        </Typography>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
+                    <Grid item xs={11}>
+                      <Typography
+                        variant="body2"
+                        className="title-card"
+                        color="textSecondary"
+                        component="p"
                       >
-                        <div className="content-card-trip">
-                          <Typography
-                            variant="body2"
-                            className="description-card filed-card three_dot"
-                            color="textSecondary"
-                            component="p"
-                          >
-                            Thời gian:
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            className="description-card three_dot"
-                            style={{ marginLeft: "4px !important" }}
-                            color="textSecondary"
-                            component="p"
-                          >
-                            {moment(trip.start_at, "YYYY-MM-DDTHH:mm:ss.SSS").format("DD-MM-YYYY")}
-                          </Typography>
-                        </div>
-                        <div className="content-card-trip">
-                          <Typography
-                            variant="body2"
-                            className="description-card filed-card three_dot"
-                            color="textSecondary"
-                            component="p"
-                          >
-                            Điểm đi:
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            className="description-card three_dot"
-                            style={{ marginLeft: "4px !important" }}
-                            color="textSecondary"
-                            component="p"
-                          >
-                            {trip.start_at}
-                          </Typography>
-                        </div>
-                        <div className="content-card-trip">
-                          <Typography
-                            variant="body2"
-                            className="description-card filed-card three_dot"
-                            color="textSecondary"
-                            component="p"
-                          >
-                            Điểm đến:
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            className="description-card three_dot"
-                            style={{ marginLeft: "4px !important" }}
-                            color="textSecondary"
-                            component="p"
-                          >
-                            {trip.start_at}
-                          </Typography>
-                        </div>
-                      </div>
-                      <div className="content-card-trip">
+                        <Subtitles />
+                        {trip.title}
+                      </Typography>
+                      <div className="trip-info-header">
                         <Typography
                           variant="body2"
-                          className="description-card filed-card three_dot"
+                          className="description-card three_dot"
                           color="textSecondary"
                           component="p"
                         >
-                          Yêu cầu:
+                          <b style={{ color: "black" }}>Thời gian: </b>
+                          {moment(
+                            trip.start_at,
+                            "YYYY-MM-DDTHH:mm:ss.SSS"
+                          ).format("DD-MM-YYYY HH:mm:ss")}
                         </Typography>
                         <Typography
                           variant="body2"
                           className="description-card three_dot"
-                          style={{ marginLeft: "4px !important" }}
                           color="textSecondary"
                           component="p"
                         >
-                          {trip.rule}
-                        </Typography>
-                      </div>
-                      <div className="content-card-trip">
-                        <Typography
-                          variant="body2"
-                          className="description-card filed-card three_dot"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          Hashtag:
+                          <b style={{ color: "black" }}>
+                            Số chỗ còn trống:{" "}
+                          </b>
+                          {trip.number_member}
                         </Typography>
                         <Typography
                           variant="body2"
-                          className="description-card hagtask-card"
+                          className="description-card three_dot"
                           color="textSecondary"
                           component="p"
                         >
-                          {trip.hashtags}
+                          <b style={{ color: "black" }}>
+                            Chi phí chuyến đi /1 người:{" "}
+                          </b>
+                          {Number(trip.cost) === 0 ? "Miễn phí" : `${trip.cost} VNĐ`}
                         </Typography>
                       </div>
+                      <div className="trip-info">
+                        <Typography
+                          variant="body2"
+                          className="description-card three_dot"
+                          color="textSecondary"
+                          component="p"
+                        >
+                          <b style={{ color: "black" }}>Điểm xuất phát: </b>
+                          {trip.start_place}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          className="description-card three_dot"
+                          color="textSecondary"
+                          component="p"
+                        >
+                          <b style={{ color: "black" }}>Điểm đến: </b>
+                          {trip.end_place}
+                        </Typography>
+                      </div>
+                      <Typography
+                        variant="body2"
+                        className="description-card three_dot"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        <b style={{ color: "black" }}>Yêu cầu: </b>
+                        {trip.rules}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        className="hagtask-card"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        {trip.hashtags}
+                      </Typography>
                     </Grid>
                     <Grid container>
                       <Grid item xs={8}>
                         <CardMedia
                           className={classes.media}
-                          image={trip.url_image}
+                          image={urlImage.replace("\\","/")}
                           title="Paella dish"
                         />
                       </Grid>
+
                       <Grid item xs={1} className="icon-card">
                         <div className="icon-card-item">
                           <Tooltip
                             title={`${
-                              listPostLike.includes(trip._id)
-                                ? "Bỏ thích"
-                                : "Thích"
-                            }`}
+                              !trip.count_like ? 0 : trip.count_like
+                            } luợt thích`}
                             placement="right"
-                            onClick={() => handleClickLike(trip._id)}
+                            onClick={() => handleClickLike(trip._id, key)}
                           >
                             <IconButton
                               aria-label="settings"
@@ -279,15 +245,18 @@ const Home = () => {
                           <Tooltip title="Tham gia" placement="right">
                             <IconButton
                               aria-label="settings"
-                              onClick={() => handleClickRegister(trip)}
+                              onClick={() => handleClickRegister(trip._id)}
                             >
                               <AddCircle />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Chia sẻ" placement="right">
+                          <Tooltip
+                            title="Chia sẻ chuyến đi"
+                            placement="right"
+                          >
                             <IconButton
                               aria-label="settings"
-                              onClick={() => setIsShowModal(true)}
+                              onClick={() => handleClickShareLink(trip._id)}
                             >
                               <Share />
                             </IconButton>
@@ -296,29 +265,34 @@ const Home = () => {
                       </Grid>
                     </Grid>
                   </Card>
+                  {/* {tripLink === trip._id &&  */}
+                  <Modal
+                    isShowModal={isShowModal && tripLink === trip._id}
+                    handleShowModal={setIsShowModal}
+                    data={trip._id}
+                    title="Chia sẻ chuyến đi với người khác"
+                    type="get_link"
+                  />
+                  {/* } */}
+
+                  {/* modal điền thông tin */}
+                  <Modal
+                    isShowModal={isShowModalRegister && tripLink === trip._id}
+                    handleShowModal={setIsShowModalRegister}
+                    title="Giới thiệu về bản thân"
+                    type="register_trip"
+                    data={trip}
+                    socket={socket}
+                  />
                 </Grid>
                 <Divider />
               </div>
             );
           })}
-          <Modal
-            isShowModal={isShowModal}
-            handleShowModal={setIsShowModal}
-            title="Chia sẻ chuyến đi với người khác"
-            type="get_link"
-          />
-
-          {/* modal điền thông tin */}
-          <Modal
-            isShowModal={isShowModalRegister}
-            handleShowModal={setIsShowModalRegister}
-            title="Điền thông tin chuyến đi"
-            type="register_trip"
-          />
         </div>
       )}
     </>
   );
 };
 
-export default Home;
+export default Index;

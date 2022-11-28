@@ -136,6 +136,7 @@ function AddTrips() {
     if (dataUser && dataTrip) {
       const newTrip = dataTrip;
       const authInfo = {
+        id_author: dataUser._id,
         email: dataUser.email,
         name: dataUser.name,
         avatar: dataUser.avatar,

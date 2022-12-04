@@ -49,6 +49,8 @@ function Header({socket}) {
   const { dataUser } = useSelector((state) => state.users);
   const { listNotification, totalNotification } = useSelector((state) => state.pages);
 
+  console.log(listNotification);
+
   const listMenuAvatar = [
     {
       text: "Xem thông tin",
@@ -260,7 +262,7 @@ function Header({socket}) {
                 return (
                   <div key={index}>
                   {
-                    dataUser._id !== item.id_author ? 
+                    dataUser._id === item.id_author ? 
                     <MenuItem className={`notify-item ${!item.is_read ? 'notify-item-active': ''}`}
                     >
                       <ListItemIcon>
@@ -314,7 +316,6 @@ function Header({socket}) {
                       />
                     </MenuItem> 
                     : 
-                    Number(item.status) !== 0 ?
                     <MenuItem  className={`notify-item ${!item.is_read ? 'notify-item-active': ''}`}
                     >
                       <ListItemIcon>
@@ -331,7 +332,7 @@ function Header({socket}) {
                         </div>
                       </ListItemText>
                       </ListItemIcon>
-                    </MenuItem> : ""
+                    </MenuItem>
                   }
                   </div>
                 );
@@ -379,7 +380,6 @@ function Header({socket}) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchNotification = useCallback(() => {
-    console.log(dataUser._id);
     const param = {
       id_author: dataUser._id,
     }
@@ -397,7 +397,8 @@ function Header({socket}) {
         fetchNotification();
       }
     });
-  },[socket, dataUser, fetchNotification]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[socket, dataUser]);
 
   useEffect(() => {
     if(dataUser){

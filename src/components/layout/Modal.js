@@ -328,11 +328,10 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
       ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin");
       return;
     };
-    // console.log(data);
-    // return;
     const dataInfo = {
-      userInfo: JSON.parse(data.author_info),
-      dataRegister, 
+      userInfo: dataUser,
+      dataRegister,
+      id_author: JSON.parse(data.author_info).id_author, 
       idTrip: data._id,
       info_trip: {
         imageTrip:image, 
@@ -341,7 +340,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
       },
       status: 0,
     }
-    socket.emit("send_data_register", dataInfo)
+    socket.emit("send_data_register", dataInfo);
     Swal.fire({
       position: 'top-end',
       icon: 'success',

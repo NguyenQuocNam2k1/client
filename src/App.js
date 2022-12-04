@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from "socket.io-client";
 
 const socket = io.connect("http://localhost:8000/");
-// const socket = "";
 
 function App() {
   const [isAuthenticate, setIsAuThenticate] = useState(false);

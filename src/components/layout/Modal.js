@@ -255,7 +255,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
             id="outlined-helperText"
             variant="outlined"
             label="Điểm lên xe"
-            style={{ width: "100%" }}
+            style={{ width: "100%", color:"black" , fontSize:"14px", fontWeight:"400" }}
             defaultValue={info.place_start}
             disabled
           />
@@ -266,7 +266,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
             id="outlined-helperText"
             variant="outlined"
             label="Điểm xuống xe"
-            style={{ width: "100%" }}
+            style={{ width: "100%", color:"black" , fontSize:"14px", fontWeight:"400" }}
             defaultValue={info.place_end}
             disabled
           />
@@ -277,7 +277,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
             id="outlined-helperText"
             variant="outlined"
             label="Số điện thoại liên hệ"
-            style={{ width: "100%" }}
+            style={{ width: "100%", color:"black" , fontSize:"14px", fontWeight:"400" }}
             defaultValue={info.phone_number}
             disabled
           />
@@ -288,7 +288,7 @@ const Modals = ({ isShowModal, title, handleShowModal, type , data = "", socket 
             id="outlined-helperText"
             variant="outlined"
             label="Số điện thoại liên hệ"
-            style={{ width: "100%" }}
+            style={{ width: "100%", color:"black" , fontSize:"14px", fontWeight:"400" }}
             defaultValue={data.info_user.sex}
             disabled
           />

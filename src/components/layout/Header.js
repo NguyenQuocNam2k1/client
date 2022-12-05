@@ -49,8 +49,6 @@ function Header({socket}) {
   const { dataUser } = useSelector((state) => state.users);
   const { listNotification, totalNotification } = useSelector((state) => state.pages);
 
-  console.log(listNotification);
-
   const listMenuAvatar = [
     {
       text: "Xem thông tin",
@@ -210,7 +208,7 @@ function Header({socket}) {
     );
   };
 
-  const handleClickItemNoti = (idNoti, indexNoti, button, infoTrip, idTrip, infoUser) => {
+  const handleClickItemNoti = async (idNoti, indexNoti, button, infoTrip, idTrip, infoUser) => {
     const newList = [...listNotification];
     newList[indexNoti]['is_read'] = 1;
 
@@ -218,28 +216,27 @@ function Header({socket}) {
       type: "statusRead",
       id_notification: idNoti,
     }
-    const response = handleUpdateNotification(params);
+    await handleUpdateNotification(params);
 
-    if(Number(response.status) === 200){
-      let status = 0;
-      let newTripInfo = {...infoTrip};
-      newTripInfo['member_number'] = Number(newTripInfo['member_number']) - 1;
-      dispatch(actFetchListNoti(newList));
-      if(button === "info"){
-        setIndexNotiSelect(indexNoti);
-        setShowModalRegister(!showModalRegister);
-      }
-      if(button === "access") status = 2;
-      if(button === "cancel") status = 1;
-      const dataUpdate = {
-        idNoti: idNoti,
-        status: status,
-        newTripInfo,
-        idTrip,
-        infoUser
-      }
-      socket.emit("update_notification", dataUpdate)
+    let status = 0;
+    let newTripInfo = {...infoTrip};
+    newTripInfo['member_number'] = Number(newTripInfo['member_number']) - 1;
+    dispatch(actFetchListNoti(newList));
+    if(button === "info"){
+      setIndexNotiSelect(indexNoti);
+      setShowModalRegister(!showModalRegister);
     }
+    if(button === "access") status = 2;
+    if(button === "cancel") status = 1;
+
+    const dataUpdate = {
+      idNoti: idNoti,
+      status: status,
+      newTripInfo,
+      idTrip,
+      infoUser
+    };
+    socket.emit("update_notification", dataUpdate)
   }
 
   const handleUpdateNotification = async (params) => {
@@ -257,8 +254,16 @@ function Header({socket}) {
             <MenuList>
               {listNotification.map((item, index) => {
                 let status = '';
-                if(Number(item.status) === 1) status = 'thất bại';
-                if(Number(item.status) === 2) status = 'thành công';
+                let statusAuthor = '';
+                if(Number(item.status) === 1) {
+                  status = 'thất bại';
+                  statusAuthor = "từ chối";
+                };
+                if(Number(item.status) === 2) {
+                  status = 'thành công';
+                  statusAuthor = "đồng ý cho";
+                };
+                console.log(item);
                 return (
                   <div key={index}>
                   {
@@ -272,37 +277,46 @@ function Header({socket}) {
                           alt="anh-notification"
                         />
                       </ListItemIcon>
+                      
                       <ListItemText>
                         <div className="content-notification">
+                          {!Number(item.status) ? 
+                          <>
+                            <div className="title-noti">
+                              {item.info_user.name} đã đăng ký chuyến đi <br/> <b>{item.info_trip.nameTrip}</b> của bạn
+                            </div>
+                            <div className="btn-noti">
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                className="btn-noti-item agree"
+                                onClick = {() => handleClickItemNoti(item._id, index, "access", item.info_trip, item.id_trip, item.info_user)}
+                              >
+                                Chấp nhận
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                className="btn-noti-item cancel"
+                                onClick = {() => handleClickItemNoti(item._id, index, "cancel", item.info_trip, item.id_trip, item.info_user)}
+                              >
+                                Từ chối
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                className="btn-noti-item"
+                                onClick = {() => handleClickItemNoti(item._id, index, "info", item.info_trip, item.id_trip, item.info_user)}
+                              >
+                                Xem thông tin
+                              </Button>
+                            </div> 
+                          </>
+                          : 
                           <div className="title-noti">
-                            {item.info_user.name} đã đăng ký chuyến đi <br/> <b>{item.info_trip.nameTrip}</b> của bạn
+                              Bạn đã <b>{statusAuthor}</b> {item.info_user.name} tham gia <br /> chuyến đi
                           </div>
-                          <div className="btn-noti">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              className="btn-noti-item agree"
-                              onClick = {() => handleClickItemNoti(item._id, index, "access", item.info_trip, item.id_trip, item.info_user)}
-                            >
-                              Chấp nhận
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              className="btn-noti-item cancel"
-                              onClick = {() => handleClickItemNoti(item._id, index, "cancel", item.info_trip, item.id_trip, item.info_user)}
-                            >
-                              Từ chối
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              className="btn-noti-item"
-                              onClick = {() => handleClickItemNoti(item._id, index, "info", item.info_trip, item.id_trip, item.info_user)}
-                            >
-                              Xem thông tin
-                            </Button>
-                          </div> 
+                          }
                         </div>
                       </ListItemText>
 
@@ -316,6 +330,7 @@ function Header({socket}) {
                       />
                     </MenuItem> 
                     : 
+                    Number(item.status) !== 0 ? 
                     <MenuItem  className={`notify-item ${!item.is_read ? 'notify-item-active': ''}`}
                     >
                       <ListItemIcon>
@@ -327,12 +342,12 @@ function Header({socket}) {
                         <ListItemText>
                         <div className="content-notification">
                           <div className="title-noti">
-                            Chuyến đi <b>{item.info_trip.nameTrip}</b> bạn đăng ký đã <b>{status}</b>
+                            Chuyến đi <b>{item.info_trip.nameTrip}</b> bạn đăng ký đã <br /> <b>{status}</b>
                           </div>
                         </div>
                       </ListItemText>
                       </ListItemIcon>
-                    </MenuItem>
+                    </MenuItem> : ""
                   }
                   </div>
                 );
@@ -393,7 +408,9 @@ function Header({socket}) {
       }
     });
     socket.on("receive_noti_update", (data) => {
+      console.log(data);
       if(dataUser){
+        setShowModalRegister(false);
         fetchNotification();
       }
     });

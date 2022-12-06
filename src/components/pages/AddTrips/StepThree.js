@@ -10,7 +10,6 @@ function StepThree() {
   const handleEnterData = (value) => {
     const dataTrip = {...newTrip};
     dataTrip['rules'] = value;
-    console.log(dataTrip);
     let params = {
       data: dataTrip,
     }

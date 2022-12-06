@@ -167,7 +167,7 @@ function Profile(props) {
                                 </h4>
                                 <p>Người tạo: {author.name}</p>
                                 <p>
-                                  Ngày đi: {console.log(trip.start_at)}
+                                  Ngày đi: {trip.start_at}
                                   {moment(
                                     trip.start_at,
                                     "YYYY-MM-DDTHH:mm:ss.SSS+00"

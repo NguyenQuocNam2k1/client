@@ -224,7 +224,7 @@ function Header({socket}) {
     dispatch(actFetchListNoti(newList));
     if(button === "info"){
       setIndexNotiSelect(indexNoti);
-      setShowModalRegister(!showModalRegister);
+      setShowModalRegister(true);
     }
     if(button === "access") status = 2;
     if(button === "cancel") status = 1;
@@ -263,7 +263,6 @@ function Header({socket}) {
                   status = 'thành công';
                   statusAuthor = "đồng ý cho";
                 };
-                console.log(item);
                 return (
                   <div key={index}>
                   {
@@ -302,14 +301,14 @@ function Header({socket}) {
                               >
                                 Từ chối
                               </Button>
-                              <Button
+                              {/* <Button
                                 variant="contained"
                                 color="primary"
                                 className="btn-noti-item"
                                 onClick = {() => handleClickItemNoti(item._id, index, "info", item.info_trip, item.id_trip, item.info_user)}
                               >
                                 Xem thông tin
-                              </Button>
+                              </Button> */}
                             </div> 
                           </>
                           : 
@@ -408,9 +407,8 @@ function Header({socket}) {
       }
     });
     socket.on("receive_noti_update", (data) => {
-      console.log(data);
       if(dataUser){
-        setShowModalRegister(false);
+        setShowListNotification(false);
         fetchNotification();
       }
     });

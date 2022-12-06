@@ -8,7 +8,6 @@ export const actFetchNewTrip = (data) => {
     }
 }
 export const actFetchTotalNoti = (data) => {
-    console.log(11);
     return async (dispatch) => {
         dispatch({type: pageType.FETCH_TOTAL_NOTIFICATION, payload: data});
     }

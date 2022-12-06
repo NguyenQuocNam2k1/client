@@ -11,6 +11,7 @@ import {
 import { CloudUpload, ClearOutlined } from "@material-ui/icons/";
 import { useDispatch, useSelector } from "react-redux";
 import { saveImage, actFetchNewTrip, deleteImage } from "~/redux/actions";
+import ModalSweet from "~/components/layout/ModalSweet";
 import moment from "moment";
 
 const StepOne = ({dataTrip, handleEnterData}) => {
@@ -66,6 +67,8 @@ const StepOne = ({dataTrip, handleEnterData}) => {
       
       //fix bugs upload 1 file with onchange twice
       e.target.value = null;
+    } else {
+      ModalSweet("error","Lỗi","Yêu cầu bạn điền đầy đủ thông tin đăng ký");
     }
   };
 
